@@ -1,0 +1,3 @@
+LineNumber;OrderItemId;OrderId;BuyerName;BuyerEmail;Address;Postcode;SalePrice;ShippingPrice;SKU;Status;OrderDate
+0;4612;1238;Mr Someone;someone@gmail.com;Fantasy Street;1111;12;10;34XXQJFR;IN_STOCK;
+1;2134;2131;Mr Someone;someone@gmail.com;Fantasy Street;1111;12;10;R9QYPQF2;IN_STOCK;

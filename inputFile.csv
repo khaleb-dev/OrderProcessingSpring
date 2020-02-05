@@ -1,0 +1,21 @@
+LineNumber;OrderItemId;OrderId;BuyerName;BuyerEmail;Address;Postcode;SalePrice;ShippingPrice;SKU;Status;OrderDate
+0;21;231;Mr Someone;someone@gmail.com;Fantasy Street;1111;10;0;KS944RUR;IN_STOCK;2019-12-02
+1;12;234;Mr Someone;someone@gmail.com;Fantasy Street;1111;12;10;O2KP73W7;IN_STOCK;
+2;25;236;Mr Someone;.someone@gmail.com;Fantasy Street;1111;31;2;3PD8SLDQ;IN_STOCK;2019-02-02
+3;31;451;Mr Someone;someone@gmail.com;Fantasy Street;1111;2;0;PRKAHC7V;SOMETHING_ELSE;2019-11-12
+4;54;612;Mr Someone;someone@gmail.com;Fantasy Street;1111;4;2;KSNRY2RI;OUT_OF_STOCK;2019-04-21
+5;76;765;;someone@gmail.com;Fantasy Street;1111;12;3;MML7ZE2B;IN_STOCK;2019-02-13
+6;120;1020;Mr Someone;;Fantasy Street;1111;32;1;32FRCTEV;IN_STOCK;2019-07-17
+7;412;2131;Mr Someone;someone@gmail.com;;1111;32;1;FW6P8YJ1;OUT_OF_STOCK;2019-05-01
+8;1230;3213;Mr Someone;someone@gmail.com;Fantasy Street;1111;22;30;;OUT_OF_STOCK;2012-03-05
+9;3210;32112;Mr Someone;someone@gmail.com;Fantasy Street;1111;0;21;CBVW6WED;IN_STOCK;2019-02-10
+10;2100;2310;Mr Someone;someone@gmail.com;Fantasy Street;1111;1;-1;QM1ZF2FC;IN_STOCK;2015-12-10
+11;4327;6821;Mr Someone;someone@gmail.com;Fantasy Street;1111;1;0;MHRJ1OQ3;;
+12;6421;6783;Mr Someone;someone@gmail.com;Fantasy Street;a;1;0;MLWA8XHF;IN_STOCK;
+13;1834;8219;Mr Someone;someone@gmail.com;Fantasy Street;1111;a;0;GKWGZ1Y2;IN_STOCK;
+14;a;4213;Mr Someone;someone@gmail.com;Fantasy Street;1111;1;0;1Z4FVWRB;IN_STOCK;
+15;9812;a;Mr Someone;someone@gmail.com;Fantasy Street;1111;1;0;1Z4FVWRB;IN_STOCK;
+a;8712;6738;Mr Someone;someone@gmail.com;Fantasy Street;1111;1;0;1Z4FVWRB;IN_STOCK;
+17;6321;5127;Mr Someone;someone@gmail.com;Fantasy Street;1111;1;0;1Z4FVWRB;IN_STOCK;
+18;4612;41415;Mr Someone;someone@gmail.com;Fantasy Street;1111;12;10;O2KP73W7;IN_STOCK;
+19;4632;2131;Mr Someone;someone@gmail.com;Fantasy Street;1111;12;10;O2KP73W7;IN_STOCK;
