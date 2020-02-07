@@ -3,19 +3,21 @@ package mdev.OrderProcessingSpring;
 import ch.qos.logback.classic.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.io.PrintStream;
 
 /**
  * @author markodevelopment (Mihálovics Márkó)
  * @// TODO: 2/5/20 Create the Spring version of OrderProcessing..
  */
 @SpringBootApplication
-public class OPSpringApp implements CommandLineRunner{
+public class OPSpringApp {
 
-	private static final Logger log = (Logger) LoggerFactory.getLogger(OPSpringApp.class);
+	public static final Logger log = (Logger) LoggerFactory.getLogger(OPSpringApp.class);
+	public static final PrintStream OS = System.out;
 
 	@Autowired
 	JdbcTemplate jdbc;
@@ -24,8 +26,4 @@ public class OPSpringApp implements CommandLineRunner{
 		SpringApplication.run(OPSpringApp.class, args);
 	}
 
-	@Override
-	public void run(String... args) throws Exception {
-
-	}
 }
