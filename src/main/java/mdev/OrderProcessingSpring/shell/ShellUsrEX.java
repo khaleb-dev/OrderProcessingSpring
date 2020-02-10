@@ -1,6 +1,5 @@
 package mdev.OrderProcessingSpring.shell;
 
-import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 import org.springframework.beans.factory.annotation.Value;

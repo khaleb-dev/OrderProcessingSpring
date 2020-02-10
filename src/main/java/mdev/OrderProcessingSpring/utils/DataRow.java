@@ -1,37 +1,71 @@
 package mdev.OrderProcessingSpring.utils;
 
 import mdev.OrderProcessingSpring.OPSpringApp;
+import mdev.OrderProcessingSpring.shell.ShellUsrEX;
 
+@SuppressWarnings("unused")
 public class DataRow {
 
-    private int LineNumber, OrderItemId, OrderId, Postcode;
-    private float SalePrice, ShippingPrice;
+    private String LineNumber, OrderItemId, OrderId, Postcode;
+    private String SalePrice, ShippingPrice;
 
     private String BuyerName, BuyerEmail, Address, SKU, Status;
     private String OrderDate;
 
+    private ShellUsrEX shellUsrEX;
+
     public int getLineNumber(){
-        return LineNumber;
+        try{
+            return Integer.parseInt(LineNumber);
+        }catch (Exception ex){
+            OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + LineNumber));
+        }
+        return -1;
     }
 
     public int getOrderItemId(){
-        return OrderItemId;
+        try{
+            return Integer.parseInt(OrderItemId);
+        }catch (Exception ex){
+            OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+        }
+        return -1;
     }
 
     public int getOrderId(){
-        return OrderId;
+        try{
+            return Integer.parseInt(OrderId);
+        }catch (Exception ex){
+            OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+        }
+        return -1;
     }
 
     public int getPostcode(){
-        return Postcode;
+        try{
+            return Integer.parseInt(Postcode);
+        }catch (Exception ex){
+            OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+        }
+        return -1;
     }
 
     public float getSalePrice(){
-        return SalePrice;
+        try{
+            return Float.parseFloat(SalePrice);
+        }catch (Exception ex){
+            OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+        }
+        return -1;
     }
 
     public float getShippingPrice(){
-        return ShippingPrice;
+        try{
+            return Float.parseFloat(ShippingPrice);
+        }catch (Exception ex){
+            OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+        }
+        return -1;
     }
 
     public String getBuyerName(){
@@ -62,58 +96,12 @@ public class DataRow {
         OrderDate = d;
     }
 
-    public void setLineNumber(String LineNumber){
-        try{
-            this.LineNumber = Integer.parseInt(LineNumber);
-        }catch (NumberFormatException ex){
-            OPSpringApp.log.warn(ex.toString() + "\nLine number - unknown");
-            this.LineNumber = -1;
-        }
+    public void setShippingPrice(String shippingPrice) {
+        ShippingPrice = shippingPrice;
     }
 
-    public void setOrderItemId(String OrderItemId){
-        try{
-            this.OrderItemId = Integer.parseInt(OrderItemId);
-        }catch (NumberFormatException ex){
-            OPSpringApp.log.warn(ex.toString() + "\nLine number : " + getLineNumber());
-            this.OrderItemId = -1;
-        }
-    }
-
-    public void setOrderId(String OrderId){
-        try{
-            this.OrderId = Integer.parseInt(OrderId);
-        }catch (NumberFormatException ex){
-            OPSpringApp.log.warn(ex.toString() + "\nLine number : " + getLineNumber());
-            this.OrderId = -1;
-        }
-    }
-
-    public void setPostcode(String Postcode){
-        try{
-            this.Postcode = Integer.parseInt(Postcode);
-        }catch (NumberFormatException ex){
-            OPSpringApp.log.warn(ex.toString() + "\nLine number : " + getLineNumber());
-            this.Postcode = -1;
-        }
-    }
-
-    public void setShippingPrice(String ShippingPrice){
-        try{
-            this.ShippingPrice = Float.parseFloat(ShippingPrice);
-        }catch (NumberFormatException ex){
-            OPSpringApp.log.warn(ex.toString() + "\nLine number : " + getLineNumber());
-            this.ShippingPrice = -1;
-        }
-    }
-
-    public void setSalePrice(String SalePrice){
-        try{
-            this.SalePrice = Float.parseFloat(SalePrice);
-        }catch (NumberFormatException ex){
-            OPSpringApp.log.warn(ex.toString() + "\nLine number : " + getLineNumber());
-            this.SalePrice = -1;
-        }
+    public void setSalePrice(String salePrice) {
+        SalePrice = salePrice;
     }
 
     public void setAddress(String address) {
@@ -138,6 +126,26 @@ public class DataRow {
 
     public void setStatus(String status) {
         Status = status;
+    }
+
+    public void setShellUsrEX(ShellUsrEX shellUsrEX) {
+        this.shellUsrEX = shellUsrEX;
+    }
+
+    public void setLineNumber(String lineNumber) {
+        LineNumber = lineNumber;
+    }
+
+    public void setOrderItemId(String orderItemId) {
+        OrderItemId = orderItemId;
+    }
+
+    public void setOrderId(String orderId) {
+        OrderId = orderId;
+    }
+
+    public void setPostcode(String postcode) {
+        Postcode = postcode;
     }
 
 }

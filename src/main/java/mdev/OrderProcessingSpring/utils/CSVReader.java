@@ -1,6 +1,7 @@
 package mdev.OrderProcessingSpring.utils;
 
 import mdev.OrderProcessingSpring.OPSpringApp;
+import mdev.OrderProcessingSpring.shell.Commands;
 import org.springframework.stereotype.Component;
 import org.supercsv.cellprocessor.ConvertNullTo;
 import org.supercsv.cellprocessor.ift.CellProcessor;
@@ -16,13 +17,30 @@ import java.util.List;
 @Component
 public class CSVReader {
 
+    private Commands commands;
+
     public DataRow[] readFile(File file) {
         List<DataRow> dataList = new ArrayList<>();
         try (ICsvBeanReader reader = new CsvBeanReader(new FileReader(file), CsvPreference.EXCEL_NORTH_EUROPE_PREFERENCE)) {
             final String[] headers = reader.getHeader(true);
             final CellProcessor[] processors = getProcessors();
             DataRow csvBean;
+            OPSpringApp.log.debug(commands.shellUsrEX.getInfoMessage("LineNumber;OrderItemId;OrderId;BuyerName;BuyerEmail;Address;Postcode;SalePrice;ShippingPrice;SKU;Status;OrderDate"));
             while ((csvBean = reader.read(DataRow.class, headers, processors)) != null) {
+                csvBean.setShellUsrEX(commands.shellUsrEX);
+                OPSpringApp.log.debug(commands.shellUsrEX.getInfoMessage(
+                                csvBean.getLineNumber() + ";" +
+                                csvBean.getOrderItemId() + ";" +
+                                csvBean.getOrderId() + ";" +
+                                csvBean.getBuyerName() + ";" +
+                                csvBean.getBuyerEmail() + ";" +
+                                csvBean.getAddress() + ";" +
+                                csvBean.getPostcode() + ";" +
+                                csvBean.getSalePrice() + ";" +
+                                csvBean.getShippingPrice() + ";" +
+                                csvBean.getSKU() + ";" +
+                                csvBean.getStatus() + ";" +
+                                csvBean.getOrderDate()));
                 dataList.add(csvBean);
             }
 
@@ -35,7 +53,7 @@ public class CSVReader {
 
             return dr;
         }catch (Exception ex){
-            OPSpringApp.log.error(ex.toString());
+            OPSpringApp.log.error(commands.shellUsrEX.getErrorMessage(ex.toString()));
             return null;
         }
     }
@@ -58,4 +76,7 @@ public class CSVReader {
         };
     }
 
+    public void setCommands(Commands commands) {
+        this.commands = commands;
+    }
 }

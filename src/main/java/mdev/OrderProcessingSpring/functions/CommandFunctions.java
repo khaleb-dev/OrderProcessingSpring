@@ -34,15 +34,14 @@ public class CommandFunctions {
      * @// TODO: 2/7/20 Percentage calc, Question to upload not 100% fine file, Upload, Return process results
      */
     public String upload(DataRow[] dataRows){
-
-        return null;
+        return "";
     }
 
     /**
      * @// TODO: 2/7/20 Percentage calc, Return results
      */
     public String validate(DataRow[] dataRows){
-        return null;
+        return "";
     }
 
     public String saveFtp(String url, int port, String name, String pass){
@@ -114,5 +113,6 @@ public class CommandFunctions {
 
     public void setCommands(Commands commands) {
         this.commands = commands;
+        csvReader.setCommands(commands);
     }
 }
