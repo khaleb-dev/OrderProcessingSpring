@@ -19,12 +19,6 @@ public class ShellUsrEX {
     @Value("${shell.ux.design.error}")
     public String errorColor;
 
-    private Terminal terminal;
-
-    public ShellUsrEX(Terminal terminal) {
-        this.terminal = terminal;
-    }
-
     public String getColored(String message, ShellUXDesign color) {
         return (new AttributedStringBuilder()).append(message, AttributedStyle.DEFAULT.foreground(color.getValue())).toAnsi();
     }
@@ -43,15 +37,6 @@ public class ShellUsrEX {
 
     public String getErrorMessage(String message) {
         return getColored(message, ShellUXDesign.valueOf(errorColor));
-    }
-
-    public void print(String message, ShellUXDesign color) {
-        String toPrint = message;
-        if (color != null) {
-            toPrint = getColored(message, color);
-        }
-        terminal.writer().println(toPrint);
-        terminal.flush();
     }
 
 }
