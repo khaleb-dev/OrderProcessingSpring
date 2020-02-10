@@ -7,8 +7,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.io.PrintStream;
-
 /**
  * @author markodevelopment (Mihálovics Márkó)
  * @// TODO: 2/5/20 Create the Spring version of OrderProcessing..
@@ -17,7 +15,6 @@ import java.io.PrintStream;
 public class OPSpringApp {
 
 	public static final Logger log = (Logger) LoggerFactory.getLogger(OPSpringApp.class);
-	public static final PrintStream OS = System.out;
 
 	@Autowired
 	JdbcTemplate jdbc;

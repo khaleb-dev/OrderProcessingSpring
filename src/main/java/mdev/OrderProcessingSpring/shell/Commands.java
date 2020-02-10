@@ -15,6 +15,7 @@ public class Commands {
     @Autowired
     public Commands(CommandFunctions commandFunctions, ShellUsrEX shellUsrEX) {
         this.commandFunctions = commandFunctions;
+        commandFunctions.setCommands(this);
         this.shellUsrEX = shellUsrEX;
     }
 
@@ -33,9 +34,10 @@ public class Commands {
     @ShellMethod(value = "Asks for FTP login details to save for later usage.",
             key = {"save-ftp", "save", "sv", "sv-ftp", "save-ftp-login"})
     public String saveFtpLogin(@ShellOption({"-U", "--url"}) String url,
+                               @ShellOption({"-P", "--port"}) int port,
                                @ShellOption({"-N", "--name"}) String name,
-                               @ShellOption({"-P", "--pass"}) String pass) {
-        return shellUsrEX.getSuccessMessage(commandFunctions.saveFtp(url, name, pass));
+                               @ShellOption({"-PW", "--pass"}) String pass) {
+        return shellUsrEX.getSuccessMessage(commandFunctions.saveFtp(url, port, name, pass));
     }
 
     @ShellMethod(value = "Removes the saved FTP login details if it finds any.",
@@ -43,10 +45,10 @@ public class Commands {
     public String removeFtpLogin(@ShellOption({"-P", "--proceed"}) boolean proceed) {
         if (proceed){
             commandFunctions.removeFtp();
-            return shellUsrEX.getSuccessMessage("The FTP Login details have been removed.");
         }else{
-            return shellUsrEX.getInfoMessage("You did not remove the FTP Login details.");
+            return shellUsrEX.getInfoMessage("You did not proceed.");
         }
+        return "";
     }
 
 }
