@@ -28,9 +28,9 @@ public class CommandFunctions {
     }
 
     /**
-     * @// TODO: 2/7/20 Percentage calc, Question to upload not 100% fine file, Upload, Return process results
+     * @// TODO: 2/7/20 Percentage calc, Question to upload not 100% fine file, Upload, Response to ftp?, Return process results
      */
-    public String upload(DataRow[] dataRows){
+    public String upload(DataRow[] dataRows, boolean uploadResponseToFtp){
         return "";
     }
 

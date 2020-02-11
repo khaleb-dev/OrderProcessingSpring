@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.InvalidKeyException;
+import java.util.Base64;
 import java.util.Properties;
 
 @Component
@@ -30,8 +31,23 @@ public class FtpIO {
         p.put(finalVars.FTP_PORT_KEY, port + "");
         p.put(finalVars.FTP_USER_KEY, name);
         finalVars.getCipher().init(Cipher.ENCRYPT_MODE, finalVars.getcKey());
-        p.put(finalVars.FTP_PASS_KEY, new String(finalVars.getCipher().doFinal(pass.getBytes())));
+        p.put(finalVars.FTP_PASS_KEY, new String(Base64.getEncoder().encode(finalVars.getCipher().doFinal(pass.getBytes()))));
 
+        return writeFtpDetails(p);
+    }
+
+    public String saveFtp(ConnectionDetail cd) throws InvalidKeyException {
+        Properties p = new Properties();
+        p.put(finalVars.FTP_SERVER_KEY, cd.getHost());
+        p.put(finalVars.FTP_PORT_KEY, cd.getPort() + "");
+        p.put(finalVars.FTP_USER_KEY, cd.getName());
+        finalVars.getCipher().init(Cipher.ENCRYPT_MODE, finalVars.getcKey());
+        p.put(finalVars.FTP_PASS_KEY, cd.getPass());
+
+        return writeFtpDetails(p);
+    }
+
+    private String writeFtpDetails(Properties p){
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(finalVars.FTP_CONNECTION_DETAILS_PROPERTIES_NAME + ".properties");
@@ -94,6 +110,13 @@ public class FtpIO {
 
     public void setCommands(Commands commands) {
         this.commands = commands;
+    }
+
+    public ConnectionDetail loadFromFile(){
+        /*
+          @// TODO: 2/11/20 FTP details file loader
+         */
+        return null;
     }
 
 }

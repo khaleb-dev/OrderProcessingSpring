@@ -22,6 +22,8 @@ public class FinalVars {
     public final String FTP_PASS_KEY = "p";
     public final String FTP_CONNECTION_DETAILS_PROPERTIES_NAME = "ftp_details";
 
+    public final int DEFAULT_FTP_PORT = 21;
+
     private Cipher cipher;
 
     @PostConstruct

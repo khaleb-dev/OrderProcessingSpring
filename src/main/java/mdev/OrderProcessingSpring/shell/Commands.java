@@ -1,28 +1,93 @@
 package mdev.OrderProcessingSpring.shell;
 
 import mdev.OrderProcessingSpring.functions.CommandFunctions;
+import mdev.OrderProcessingSpring.functions.ftp.ConnectionDetail;
+import mdev.OrderProcessingSpring.functions.ftp.FtpIO;
+import mdev.OrderProcessingSpring.functions.ftp.FtpNet;
+import mdev.OrderProcessingSpring.utils.FinalVars;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.util.Base64;
+
 @ShellComponent
 public class Commands {
 
+    private final FinalVars finalVars;
+    private final FtpNet ftpNet;
+    private final FtpIO ftpIO;
     private final CommandFunctions commandFunctions;
     public final ShellUsrEX shellUsrEX;
 
     @Autowired
-    public Commands(CommandFunctions commandFunctions, ShellUsrEX shellUsrEX) {
+    public Commands(CommandFunctions commandFunctions, ShellUsrEX shellUsrEX,
+                    FtpNet ftpNet, FinalVars finalVars, FtpIO ftpIO) {
         this.commandFunctions = commandFunctions;
         commandFunctions.setCommands(this);
         this.shellUsrEX = shellUsrEX;
+        this.ftpNet = ftpNet;
+        this.finalVars = finalVars;
+        this.ftpIO = ftpIO;
     }
 
     @ShellMethod(value = "Initializes the csv file uploading process.",
             key = {"upload", "upl", "up", "up-fl", "upload-file"})
-    public String uploadFile(@ShellOption({"-P", "--path"}) String path) {
-        return shellUsrEX.getSuccessMessage(commandFunctions.upload(commandFunctions.getDataRows(commandFunctions.readFile(path))));
+    public String uploadFile(@ShellOption({"-P", "--path"}) String path,
+                             @ShellOption({"-R", "--upload-response", "--upload-response-to-ftp", "--ur-to-ftp"}) boolean uploadResponseToFtp) {
+        return shellUsrEX.getSuccessMessage(
+                commandFunctions.upload(
+                        commandFunctions.getDataRows(commandFunctions.readFile(path)),
+                        uploadResponseToFtp
+                )
+        );
+    }
+
+    /**
+     * Connects to an FTP server.
+     *
+     * @param host The server host name
+     * @param port The server port
+     * @param name The user name
+     * @param pass The password
+     * @param saveDetails When true - saves the connection details
+     * @param autoConnect When true - tries to load connection details from file
+     * @return The result of the connection process
+     */
+    @ShellMethod(value = "Connects to an FTP server.",
+            key = {"connect", "con", "cf", "con-ftp", "connect-to-ftp"})
+    public String connectToFtp(@ShellOption(value = {"-H", "--host"}, defaultValue = "") String host,
+                               @ShellOption(value = {"-P", "--port"}, defaultValue = "") String port,
+                               @ShellOption(value = {"-N", "--name"}, defaultValue = "") String name,
+                               @ShellOption(value = {"-PW", "--password"}, defaultValue = "") String pass,
+                               @ShellOption(value = {"-S", "--save"}) boolean saveDetails,
+                               @ShellOption(value = {"-A", "--auto"}) boolean autoConnect){
+        if (autoConnect){
+            try {
+                return shellUsrEX.getSuccessMessage(ftpNet.connect(ftpIO.loadFromFile()) ?
+                        "Connected!" : "Connection failed!");
+            } catch (IOException e) {
+                return shellUsrEX.getErrorMessage(e.toString());
+            }
+        }else{
+            int p;
+            try{
+                p = Integer.parseInt(port);
+            }catch (Exception ex){
+                p = finalVars.DEFAULT_FTP_PORT;
+            }
+            try {
+                return normalFtpConnection(host, p, name, pass, saveDetails);
+            } catch (InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
+                return shellUsrEX.getErrorMessage(e.toString());
+            }
+        }
     }
 
     @ShellMethod(value = "Initializes the csv file validation process. (Checks the file validation without uploading it to the database...)",
@@ -54,5 +119,29 @@ public class Commands {
         }
         return "";
     }
+
+    private String normalFtpConnection(String host, int p, String name, String pass, boolean save) throws InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+        finalVars.getCipher().init(Cipher.ENCRYPT_MODE, finalVars.getcKey());
+        try {
+            ConnectionDetail cd = new ConnectionDetail(host, p, name,
+                    new String(Base64.getEncoder()
+                            .encode(finalVars.getCipher().doFinal(pass.getBytes()))));
+
+            String saveStatus = "\n";
+            if (save){
+                saveStatus += ftpIO.saveFtp(cd);
+            }
+
+            return shellUsrEX.getSuccessMessage(ftpNet.connect(cd) ?
+                    "Connected!" + (saveStatus.equals("\n") ? "" : saveStatus) :
+                    "Connection failed!" + (saveStatus.equals("\n") ? "" : saveStatus));
+        } catch (IOException e) {
+            return shellUsrEX.getErrorMessage(e.toString());
+        }
+    }
+
+    /*
+      @// TODO: 2/11/20 FTP Disconnect method
+     */
 
 }

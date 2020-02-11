@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
+import java.util.Base64;
 
 @Component
 public class FtpNet {
@@ -30,7 +31,8 @@ public class FtpNet {
         client.connect(connectionDetail.getHost(), connectionDetail.getPort());
         try {
             finalVars.getCipher().init(Cipher.DECRYPT_MODE, finalVars.getcKey());
-            String decrypted = new String(finalVars.getCipher().doFinal(connectionDetail.getPass().getBytes()));
+            String decrypted = new String(finalVars.getCipher().doFinal(
+                    Base64.getDecoder().decode(connectionDetail.getPass().getBytes())));
             return client.login(connectionDetail.getName(), decrypted);
         } catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
             e.printStackTrace();
