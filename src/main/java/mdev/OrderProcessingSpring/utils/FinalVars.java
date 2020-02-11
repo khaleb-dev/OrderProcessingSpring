@@ -1,12 +1,20 @@
 package mdev.OrderProcessingSpring.utils;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.crypto.Cipher;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 
 @Component
 public class FinalVars {
+
+    @Value("${ftp.pass.c.key}")
+    private String cKey;
 
     public final String FTP_SERVER_KEY = "server";
     public final String FTP_PORT_KEY = "port";
@@ -14,14 +22,22 @@ public class FinalVars {
     public final String FTP_PASS_KEY = "p";
     public final String FTP_CONNECTION_DETAILS_PROPERTIES_NAME = "ftp_details";
 
-    private BCryptPasswordEncoder encrypt;
+    private Cipher cipher;
 
     @PostConstruct
-    public void initializeEncrypt(){
-        encrypt = new BCryptPasswordEncoder();
+    public void initCipher(){
+        try {
+            cipher = Cipher.getInstance("AES");
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+            e.printStackTrace();
+        }
     }
 
-    public BCryptPasswordEncoder getEncrypt() {
-        return encrypt;
+    public Cipher getCipher() {
+        return cipher;
+    }
+
+    public Key getcKey() {
+        return new SecretKeySpec(cKey.getBytes(), "AES");
     }
 }

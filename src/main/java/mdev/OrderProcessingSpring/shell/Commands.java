@@ -37,7 +37,11 @@ public class Commands {
                                @ShellOption({"-P", "--port"}) int port,
                                @ShellOption({"-N", "--name"}) String name,
                                @ShellOption({"-PW", "--pass"}) String pass) {
-        return shellUsrEX.getSuccessMessage(commandFunctions.saveFtp(url, port, name, pass));
+        try {
+            return shellUsrEX.getSuccessMessage(commandFunctions.saveFtp(url, port, name, pass));
+        } catch (Exception e) {
+            return shellUsrEX.getErrorMessage(e.toString());
+        }
     }
 
     @ShellMethod(value = "Removes the saved FTP login details if it finds any.",
