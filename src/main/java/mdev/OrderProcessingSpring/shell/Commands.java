@@ -140,8 +140,18 @@ public class Commands {
         }
     }
 
-    /*
-      @// TODO: 2/11/20 FTP Disconnect method
-     */
+    @ShellMethod(value = "Attempts to disconnect from the FTP server (if connected to any)",
+            key = {"disconnect", "dc", "d-connect", "disconnect-from-ftp"})
+    public String disconnectFromFtp(@ShellOption({"-Y", "--yes"}) boolean sure) {
+        if (sure){
+            try {
+                ftpNet.disconnect();
+                return shellUsrEX.getSuccessMessage("Disconnected!");
+            } catch (IOException e) {
+                return shellUsrEX.getInfoMessage("Disconnect failed!");
+            }
+        }
+        return shellUsrEX.getInfoMessage("If you really want to disconnect use the \"-Y\" switch!");
+    }
 
 }

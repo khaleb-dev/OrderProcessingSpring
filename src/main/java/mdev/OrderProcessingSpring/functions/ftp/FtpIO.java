@@ -9,9 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.security.InvalidKeyException;
 import java.util.Base64;
 import java.util.Properties;
@@ -113,10 +111,21 @@ public class FtpIO {
     }
 
     public ConnectionDetail loadFromFile(){
-        /*
-          @// TODO: 2/11/20 FTP details file loader
-         */
-        return null;
+        ConnectionDetail cd = null;
+        Properties p = new Properties();
+        try (InputStream is = new FileInputStream(finalVars.FTP_CONNECTION_DETAILS_PROPERTIES_NAME + ".properties")) {
+
+            p.load(is);
+            cd = new ConnectionDetail(
+                    p.getProperty(finalVars.FTP_SERVER_KEY),
+                    Integer.parseInt(p.getProperty(finalVars.FTP_PORT_KEY)),
+                    p.getProperty(finalVars.FTP_USER_KEY),
+                    p.getProperty(finalVars.FTP_PASS_KEY));
+
+        } catch (IOException ex) {
+            OPSpringApp.log.error(commands.shellUsrEX.getErrorMessage(ex.toString()));
+        }
+        return cd;
     }
 
 }
