@@ -14,11 +14,15 @@ public class DataRow {
 
     private ShellUsrEX shellUsrEX;
 
+    private boolean warn = true;
+
     public int getLineNumber(){
         try{
             return Integer.parseInt(LineNumber);
         }catch (Exception ex){
-            OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + LineNumber));
+            if (warn){
+                OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + LineNumber));
+            }
         }
         return -1;
     }
@@ -27,7 +31,9 @@ public class DataRow {
         try{
             return Integer.parseInt(OrderItemId);
         }catch (Exception ex){
-            OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+            if (warn){
+                OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+            }
         }
         return -1;
     }
@@ -36,7 +42,9 @@ public class DataRow {
         try{
             return Integer.parseInt(OrderId);
         }catch (Exception ex){
-            OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+            if (warn){
+                OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+            }
         }
         return -1;
     }
@@ -45,7 +53,9 @@ public class DataRow {
         try{
             return Integer.parseInt(Postcode);
         }catch (Exception ex){
-            OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+            if (warn){
+                OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+            }
         }
         return -1;
     }
@@ -54,7 +64,9 @@ public class DataRow {
         try{
             return Float.parseFloat(SalePrice);
         }catch (Exception ex){
-            OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+            if (warn){
+                OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+            }
         }
         return -1;
     }
@@ -63,7 +75,9 @@ public class DataRow {
         try{
             return Float.parseFloat(ShippingPrice);
         }catch (Exception ex){
-            OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+            if (warn){
+                OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+            }
         }
         return -1;
     }
@@ -146,6 +160,10 @@ public class DataRow {
 
     public void setPostcode(String postcode) {
         Postcode = postcode;
+    }
+
+    public void disableWarn(){
+        warn = false;
     }
 
 }
