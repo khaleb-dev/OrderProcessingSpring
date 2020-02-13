@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
+/**
+ * @author markodevelopment (Mihálovics Márkó)
+ */
 @Component
 public class PercentageCalculator {
 

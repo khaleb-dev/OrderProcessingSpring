@@ -5,6 +5,9 @@ import mdev.OrderProcessingSpring.shell.ShellUsrEX;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * @author markodevelopment (Mihálovics Márkó)
+ */
 @Configuration
 public class ShellConfig {
 

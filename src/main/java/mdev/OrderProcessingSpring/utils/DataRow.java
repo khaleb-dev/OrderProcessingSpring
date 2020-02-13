@@ -3,6 +3,9 @@ package mdev.OrderProcessingSpring.utils;
 import mdev.OrderProcessingSpring.OPSpringApp;
 import mdev.OrderProcessingSpring.shell.ShellUsrEX;
 
+/**
+ * @author markodevelopment (Mihálovics Márkó)
+ */
 @SuppressWarnings("unused")
 public class DataRow {
 

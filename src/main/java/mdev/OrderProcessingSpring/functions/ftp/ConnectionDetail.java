@@ -1,5 +1,8 @@
 package mdev.OrderProcessingSpring.functions.ftp;
 
+/**
+ * @author markodevelopment (Mihálovics Márkó)
+ */
 public class ConnectionDetail {
 
     private final String host, name, pass;

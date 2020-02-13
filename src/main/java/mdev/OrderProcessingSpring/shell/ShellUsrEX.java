@@ -4,6 +4,9 @@ import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 import org.springframework.beans.factory.annotation.Value;
 
+/**
+ * @author markodevelopment (Mihálovics Márkó)
+ */
 public class ShellUsrEX {
 
     @Value("${shell.ux.design.info}")

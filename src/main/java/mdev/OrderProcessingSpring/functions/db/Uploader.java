@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * @author markodevelopment (Mihálovics Márkó)
+ */
 @Component
 public class Uploader {
 

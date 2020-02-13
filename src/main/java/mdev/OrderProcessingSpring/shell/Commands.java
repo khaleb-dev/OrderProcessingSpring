@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.util.Base64;
 
+/**
+ * @author markodevelopment (Mihálovics Márkó)
+ */
 @ShellComponent
 public class Commands {
 

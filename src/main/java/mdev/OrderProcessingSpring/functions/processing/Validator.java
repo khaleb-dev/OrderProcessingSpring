@@ -20,6 +20,9 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Locale;
 
+/**
+ * @author markodevelopment (Mihálovics Márkó)
+ */
 @Component
 public class Validator {
 
@@ -42,53 +45,69 @@ public class Validator {
     public PercentageCalculator percentageCalculator;
 
     private ArrayList<ValidationError> validationErrors;
+    private boolean valid; // The validity of the validated file
+    private boolean email, fill, date, shippingPrice, salePrice,
+            status, orderItemId, orderId, postcode, lineNumber;
 
     public String validate(DataRow[] dataRows){
-        validationErrors = new ArrayList<>();
-        boolean valid = true;
+        init();
 
         for (DataRow dr : dataRows){
             dr.disableWarn();
-            boolean email = validEmail(dr.getBuyerEmail());
-            boolean fill = validFill(dr.getBuyerEmail(), dr.getBuyerName(),
-                    dr.getSKU(), dr.getStatus(), dr.getAddress());
-            boolean date = true;
-            boolean shippingPrice = validShippingPrice(dr.getShippingPrice());
-            boolean salePrice = validSalePrice(dr.getSalePrice());
-            boolean status = validStatus(dr.getStatus());
-            boolean orderItemId = !validOrderItemIdInUse(dr.getOrderItemId());
-            boolean orderId = !validOrderIdInUse(dr.getOrderId());
-            boolean postcode = dr.getPostcode() != -1;
-            boolean lineNumber = dr.getLineNumber() != -1;
-
-            boolean dateIsEmpty = false;
-            if (dr.getOrderDate() != null){
-                if (dr.getOrderDate().isEmpty()){
-                    dateIsEmpty = true;
-                }
-            }else{
-                dateIsEmpty = true;
-            }
-
-            if (!dateIsEmpty){
-                date = validDate(finalVars.DATE_FORMAT, dr.getOrderDate(), Locale.ENGLISH);
-            }
-
-            if (!email || !fill || !date || !shippingPrice || !salePrice ||
-                    !status || !orderItemId || !orderId || !postcode || !lineNumber){
-                valid = false;
-                String errorMessage = errorMessageCreator.create(email, fill, date, shippingPrice,
-                        salePrice, status, orderItemId, orderId, dr);
-                validationErrors.add(new ValidationError(dr.getLineNumber(),
-                        errorMessage, finalVars.STATUS_ERROR));
-            }
+            check(dr);
         }
 
         if (valid){
-            return shellUsrEX.getSuccessMessage("The file is 100% valid!");
+            return shellUsrEX.getSuccessMessage(
+                    "\n-----------------------"+
+                    "\nThe file is 100% valid!"+
+                    "\n-----------------------");
         }
 
         return shellUsrEX.getWarningMessage(Errors(dataRows.length));
+    }
+
+    private void init(){
+        validationErrors = new ArrayList<>();
+        valid = true;
+    }
+
+    private void check(DataRow dr){
+        setBools(dr);
+
+        if (!checkEmpty(dr.getOrderDate())){
+            date = validDate(finalVars.DATE_FORMAT, dr.getOrderDate(), Locale.ENGLISH);
+        }
+
+        if (!email || !fill || !date || !shippingPrice || !salePrice ||
+                !status || !orderItemId || !orderId || !postcode || !lineNumber){
+            valid = false;
+            String errorMessage = errorMessageCreator.create(email, fill, date, shippingPrice,
+                    salePrice, status, orderItemId, orderId, dr);
+            validationErrors.add(new ValidationError(dr.getLineNumber(),
+                    errorMessage, finalVars.STATUS_ERROR));
+        }
+    }
+
+    private void setBools(DataRow dr){
+        email = validEmail(dr.getBuyerEmail());
+        fill = validFill(dr.getBuyerEmail(), dr.getBuyerName(),
+                dr.getSKU(), dr.getStatus(), dr.getAddress());
+        date = true;
+        shippingPrice = validShippingPrice(dr.getShippingPrice());
+        salePrice = validSalePrice(dr.getSalePrice());
+        status = validStatus(dr.getStatus());
+        orderItemId = !validOrderItemIdInUse(dr.getOrderItemId());
+        orderId = !validOrderIdInUse(dr.getOrderId());
+        postcode = dr.getPostcode() != -1;
+        lineNumber = dr.getLineNumber() != -1;
+    }
+
+    private boolean checkEmpty(String s){
+        if (s == null){
+            return true;
+        }
+        return s.isEmpty();
     }
 
     private String Errors(int drSize){
@@ -102,7 +121,7 @@ public class Validator {
         if (percent != 0.0f){
             sb.append("\nBut ");
             sb.append(percent);
-            sb.append("% of it is valid.\n");
+            sb.append("% of it is valid...\n");
         }
 
         for (ValidationError ve : validationErrors){
@@ -127,13 +146,7 @@ public class Validator {
     private boolean validFill(String... data){
         boolean correct = true;
         for (String s : data){
-            if (s != null){
-                if (s.isEmpty()){
-                    correct = false;
-                }
-            }else{
-                correct = false;
-            }
+            correct = correct && checkEmpty(s);
         }
         return correct;
     }

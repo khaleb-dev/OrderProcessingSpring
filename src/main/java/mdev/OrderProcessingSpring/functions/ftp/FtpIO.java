@@ -14,6 +14,9 @@ import java.security.InvalidKeyException;
 import java.util.Base64;
 import java.util.Properties;
 
+/**
+ * @author markodevelopment (Mihálovics Márkó)
+ */
 @Component
 public class FtpIO {
 

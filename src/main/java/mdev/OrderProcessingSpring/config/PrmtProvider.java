@@ -5,6 +5,9 @@ import org.jline.utils.AttributedStyle;
 import org.springframework.shell.jline.PromptProvider;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author markodevelopment (Mihálovics Márkó)
+ */
 @Component
 public class PrmtProvider implements PromptProvider {
 

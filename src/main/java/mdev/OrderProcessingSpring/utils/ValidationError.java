@@ -1,5 +1,8 @@
 package mdev.OrderProcessingSpring.utils;
 
+/**
+ * @author markodevelopment (Mihálovics Márkó)
+ */
 public class ValidationError {
 
     private final String message, status;

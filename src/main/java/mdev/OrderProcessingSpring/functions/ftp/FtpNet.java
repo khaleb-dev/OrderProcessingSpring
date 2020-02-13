@@ -15,6 +15,9 @@ import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.util.Base64;
 
+/**
+ * @author markodevelopment (Mihálovics Márkó)
+ */
 @Component
 public class FtpNet {
 

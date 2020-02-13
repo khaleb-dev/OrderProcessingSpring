@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * @author markodevelopment (Mihálovics Márkó)
- * @// TODO: 2/5/20 Create the Spring version of OrderProcessing..
  */
 @SpringBootApplication
 public class OPSpringApp {

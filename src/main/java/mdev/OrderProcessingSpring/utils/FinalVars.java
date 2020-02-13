@@ -10,6 +10,9 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * @author markodevelopment (Mihálovics Márkó)
+ */
 @Component
 public class FinalVars {
 

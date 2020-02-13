@@ -13,6 +13,9 @@ import javax.crypto.IllegalBlockSizeException;
 import java.io.File;
 import java.security.InvalidKeyException;
 
+/**
+ * @author markodevelopment (Mihálovics Márkó)
+ */
 public class CommandFunctions {
 
     @Autowired
