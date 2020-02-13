@@ -49,7 +49,7 @@ public class Validator {
     private boolean email, fill, date, shippingPrice, salePrice,
             status, orderItemId, orderId, postcode, lineNumber;
 
-    public String validate(DataRow[] dataRows){
+    public String validate(DataRow[] dataRows, boolean ignoreOutput){
         init();
 
         for (DataRow dr : dataRows){
@@ -57,14 +57,18 @@ public class Validator {
             check(dr);
         }
 
-        if (valid){
-            return shellUsrEX.getSuccessMessage(
-                    "\n-----------------------"+
-                    "\nThe file is 100% valid!"+
-                    "\n-----------------------");
+        if (!ignoreOutput){
+            if (valid){
+                return shellUsrEX.getSuccessMessage(
+                        "\n-----------------------"+
+                                "\nThe file is 100% valid!"+
+                                "\n-----------------------");
+            }
+
+            return shellUsrEX.getWarningMessage(Errors(dataRows.length));
         }
 
-        return shellUsrEX.getWarningMessage(Errors(dataRows.length));
+        return "";
     }
 
     private void init(){
@@ -202,4 +206,11 @@ public class Validator {
         return idChecker.validOrderIdInUse(id);
     }
 
+    public boolean isValid() {
+        return valid;
+    }
+
+    public ArrayList<ValidationError> getValidationErrors() {
+        return validationErrors;
+    }
 }

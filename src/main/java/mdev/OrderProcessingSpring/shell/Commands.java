@@ -43,11 +43,13 @@ public class Commands {
     @ShellMethod(value = "Initializes the csv file uploading process.",
             key = {"upload", "upl", "up", "up-fl", "upload-file"})
     public String uploadFile(@ShellOption({"-P", "--path"}) String path,
-                             @ShellOption({"-R", "--upload-response", "--upload-response-to-ftp", "--ur-to-ftp"}) boolean uploadResponseToFtp) {
+                             @ShellOption({"-R", "--upload-response", "--upload-response-to-ftp", "--ur-to-ftp"}) boolean uploadResponseToFtp,
+                             @ShellOption(value = {"-F", "--force", "--force-upload"}) boolean forceUpload) {
         return shellUsrEX.getSuccessMessage(
                 commandFunctions.upload(
                         commandFunctions.getDataRows(commandFunctions.readFile(path)),
-                        uploadResponseToFtp
+                        uploadResponseToFtp,
+                        forceUpload
                 )
         );
     }

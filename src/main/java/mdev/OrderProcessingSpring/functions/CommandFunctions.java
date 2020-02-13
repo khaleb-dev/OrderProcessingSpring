@@ -38,12 +38,12 @@ public class CommandFunctions {
         return csvReader.readFile(file);
     }
 
-    public String upload(DataRow[] dataRows, boolean uploadResponseToFtp){
-        return uploader.upload(dataRows, uploadResponseToFtp);
+    public String upload(DataRow[] dataRows, boolean uploadResponseToFtp, boolean forceUpload){
+        return uploader.upload(dataRows, uploadResponseToFtp, forceUpload);
     }
 
     public String validate(DataRow[] dataRows){
-        return validator.validate(dataRows);
+        return validator.validate(dataRows, false);
     }
 
     public String saveFtp(String url, int port, String name, String pass) throws BadPaddingException, InvalidKeyException, IllegalBlockSizeException {
