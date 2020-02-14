@@ -40,3 +40,5 @@ spring.jpa.database-platform=org.hibernate.dialect.MySQL5Dialect
  ```CLI
  op:>up path/to/your/file/your_file.csv -R -F
  ```
+
+#### Check out [GitHub Wiki](https://github.com/m-devs/OrderProcessingSpring/wiki) for more information about the commands.
