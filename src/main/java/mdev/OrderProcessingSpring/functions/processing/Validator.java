@@ -49,6 +49,8 @@ public class Validator {
     private boolean email, fill, date, shippingPrice, salePrice,
             status, orderItemId, orderId, postcode, lineNumber;
 
+    private ArrayList<DataRow> validData;
+
     public String validate(DataRow[] dataRows, boolean ignoreOutput){
         init();
 
@@ -60,7 +62,7 @@ public class Validator {
         if (!ignoreOutput){
             if (valid){
                 return shellUsrEX.getSuccessMessage(
-                        "\n-----------------------"+
+                                "\n-----------------------" +
                                 "\nThe file is 100% valid!"+
                                 "\n-----------------------");
             }
@@ -72,6 +74,7 @@ public class Validator {
     }
 
     private void init(){
+        validData = new ArrayList<>();
         validationErrors = new ArrayList<>();
         valid = true;
     }
@@ -79,8 +82,10 @@ public class Validator {
     private void check(DataRow dr){
         setBools(dr);
 
-        if (!checkEmpty(dr.getOrderDate())){
+        if (checkEmpty(dr.getOrderDate())){
             date = validDate(finalVars.DATE_FORMAT, dr.getOrderDate(), Locale.ENGLISH);
+        }else{
+            date = true;
         }
 
         if (!email || !fill || !date || !shippingPrice || !salePrice ||
@@ -90,6 +95,8 @@ public class Validator {
                     salePrice, status, orderItemId, orderId, dr);
             validationErrors.add(new ValidationError(dr.getLineNumber(),
                     errorMessage, finalVars.STATUS_ERROR));
+        }else{
+            validData.add(dr);
         }
     }
 
@@ -111,7 +118,7 @@ public class Validator {
         if (s == null){
             return true;
         }
-        return s.isEmpty();
+        return !s.isEmpty();
     }
 
     private String Errors(int drSize){
@@ -212,5 +219,9 @@ public class Validator {
 
     public ArrayList<ValidationError> getValidationErrors() {
         return validationErrors;
+    }
+
+    public DataRow[] getValidData() {
+        return validData.toArray(new DataRow[0]);
     }
 }
