@@ -16,7 +16,9 @@ You can see the used dependecies here: [Network dependecies](https://github.com/
 ```Git
 git clone https://github.com/m-devs/OrderProcessingSpring.git
 ```
-1. **Change** the **DB** connection details in the **[application.properties](https://github.com/m-devs/OrderProcessingSpring/blob/master/src/main/resources/application.properties)** file.
+1.5 **Import** the database sample from the provided sql file...
+
+2. **Change** the **DB** connection details in the **[application.properties](https://github.com/m-devs/OrderProcessingSpring/blob/master/src/main/resources/application.properties)** file.
 ```Properties
 ...
 spring.datasource.url=jdbc:mysql://localhost:3306/orderprocessingdb
@@ -26,7 +28,7 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.jpa.database-platform=org.hibernate.dialect.MySQL5Dialect
 ...
 ```
-1. **Profit!**
+3. **Profit!**
 **The Commands**
 > Connect to your FTP server
 >  * -S : Save the login details
