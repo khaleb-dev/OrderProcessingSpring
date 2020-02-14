@@ -29,6 +29,7 @@ spring.jpa.database-platform=org.hibernate.dialect.MySQL5Dialect
 ...
 ```
 3. **Profit!**
+
 **The Commands**
 > Connect to your FTP server
 >  * -S : Save the login details
