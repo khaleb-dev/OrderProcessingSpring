@@ -31,7 +31,6 @@ public class FinalVars {
     public final String ERROR_ORDER__ID = "This orderId is already in use in the database";
     public final String ERROR_NUMBER_FORMAT = "Bad number format!";
 
-    @SuppressWarnings("unused")
     public final String STATUS_OK = "OK";
     public final String STATUS_ERROR = "ERROR";
     public final String STATUS_IN = "IN_STOCK";
@@ -53,7 +52,6 @@ public class FinalVars {
 
     public final int DEFAULT_FTP_PORT = 21;
 
-    @SuppressWarnings("unused")
     public final String HEADER_LINE_NUMBER = "LineNumber";
     public final String HEADER_ORDER_ITEM_ID = "OrderItemId";
     public final String HEADER_ORDER_ID = "OrderId";
@@ -68,6 +66,8 @@ public class FinalVars {
     public final String HEADER_ORDER_DATE = "OrderDate";
     public final String ORDER_TOTAL_VALUE = "OrderTotalValue";
     public final String ORDER_ITEM_TOTAL_VALUE = "TotalItemPrice";
+    public final String HEADER_MESSAGE = "Message";
+
 
     private Cipher cipher;
 
