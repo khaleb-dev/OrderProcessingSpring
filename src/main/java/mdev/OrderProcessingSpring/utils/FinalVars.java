@@ -53,7 +53,6 @@ public class FinalVars {
 
     public final int DEFAULT_FTP_PORT = 21;
 
-
     @SuppressWarnings("unused")
     public final String HEADER_LINE_NUMBER = "LineNumber";
     public final String HEADER_ORDER_ITEM_ID = "OrderItemId";
