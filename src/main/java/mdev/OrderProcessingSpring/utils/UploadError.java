@@ -1,5 +1,8 @@
 package mdev.OrderProcessingSpring.utils;
 
+/**
+ * @author markodevelopment (Mihálovics Márkó)
+ */
 public class UploadError {
 
     private final String mes;

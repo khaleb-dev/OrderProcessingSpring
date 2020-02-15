@@ -12,6 +12,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+/**
+ * @author markodevelopment (Mihálovics Márkó)
+ */
 @Component
 public class UploadImpl implements RowDAO {
 

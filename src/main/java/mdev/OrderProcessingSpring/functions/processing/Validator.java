@@ -1,13 +1,14 @@
 package mdev.OrderProcessingSpring.functions.processing;
 
 import mdev.OrderProcessingSpring.OPSpringApp;
-import mdev.OrderProcessingSpring.functions.db.IdChecker;
 import mdev.OrderProcessingSpring.shell.Commands;
 import mdev.OrderProcessingSpring.shell.ShellUsrEX;
 import mdev.OrderProcessingSpring.utils.DataRow;
 import mdev.OrderProcessingSpring.utils.FinalVars;
+import mdev.OrderProcessingSpring.utils.IdDAO;
 import mdev.OrderProcessingSpring.utils.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.mail.internet.AddressException;
@@ -36,7 +37,9 @@ public class Validator {
     public Commands commands;
 
     @Autowired
-    public IdChecker idChecker;
+    public ApplicationContext context;
+
+    private IdDAO idDAO;
 
     @Autowired
     public ErrorMessageCreator errorMessageCreator;
@@ -77,6 +80,7 @@ public class Validator {
         validData = new ArrayList<>();
         validationErrors = new ArrayList<>();
         valid = true;
+        idDAO = context.getBean(IdDAO.class);
     }
 
     private void check(DataRow dr){
@@ -206,11 +210,11 @@ public class Validator {
     }
 
     private boolean validOrderItemIdInUse(int id) {
-        return idChecker.validOrderItemId(id);
+        return idDAO.validOrderItemId(id);
     }
 
     private boolean validOrderIdInUse(int id) {
-        return idChecker.validOrderIdInUse(id);
+        return idDAO.validOrderIdInUse(id);
     }
 
     public boolean isValid() {

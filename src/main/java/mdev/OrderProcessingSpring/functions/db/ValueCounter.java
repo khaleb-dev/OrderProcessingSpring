@@ -3,6 +3,9 @@ package mdev.OrderProcessingSpring.functions.db;
 import mdev.OrderProcessingSpring.utils.DataRow;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author markodevelopment (Mihálovics Márkó)
+ */
 @Component
 public class ValueCounter {
 

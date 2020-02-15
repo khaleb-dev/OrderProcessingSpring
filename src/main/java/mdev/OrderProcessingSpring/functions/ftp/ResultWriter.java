@@ -16,6 +16,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * @author markodevelopment (Mihálovics Márkó)
+ */
 @Component
 public class ResultWriter {
 
@@ -80,7 +83,7 @@ public class ResultWriter {
                     .append(";")
                     .append(ve.getMessage().replaceAll("\n", " "))
                     .append(";")
-                    .append(finalVars.STATUS_ERROR)
+                    .append(ve.getStatus())
                     .append("\n");
         }
         return d.toString();
