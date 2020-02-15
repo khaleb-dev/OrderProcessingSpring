@@ -28,7 +28,13 @@ public class ResultWriter {
     @Autowired
     public ShellUsrEX shellUsrEX;
 
-    @SuppressWarnings("unused")
+    /**
+     * Called to write the response file
+     * @param uploadErrors The errors that occurred at the upload process
+     * @param uploadSuccess The successfully uploaded data
+     * @param validationErrors The errors that occurred at the validation process
+     * @return The response file
+     */
     public File write(ArrayList<UploadError> uploadErrors,
                       ArrayList<String> uploadSuccess,
                       ArrayList<ValidationError> validationErrors){
@@ -89,6 +95,11 @@ public class ResultWriter {
         return d.toString();
     }
 
+    /**
+     * Converts string into file
+     * @param data The input
+     * @return The file output
+     */
     private File toFile(String data){
         File f = new File(getFileName());
         try {
@@ -102,6 +113,9 @@ public class ResultWriter {
         return f;
     }
 
+    /**
+     * @return Generated file name
+     */
     private String getFileName(){
         SimpleDateFormat f = new SimpleDateFormat(finalVars.DATE_FORMAT);
         Date date = new Date(System.currentTimeMillis());

@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class PrmtProvider implements PromptProvider {
 
+    /**
+     * @return The styled prompt
+     */
     @Override
     public AttributedString getPrompt() {
         return new AttributedString("op:>",

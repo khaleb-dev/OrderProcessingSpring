@@ -1,5 +1,7 @@
 package mdev.OrderProcessingSpring.functions.ftp;
 
+import mdev.OrderProcessingSpring.functions.db.Uploader;
+import mdev.OrderProcessingSpring.utils.DataRow;
 import mdev.OrderProcessingSpring.utils.FinalVars;
 import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,14 @@ public class FtpNet {
     @Autowired
     public FinalVars finalVars;
 
+    /**
+     * Called to connect to an FTP server
+     * @see mdev.OrderProcessingSpring.shell.Commands#connectToFtp(String, String, String, String, boolean, boolean)
+     *
+     * @param connectionDetail the login and connection details
+     * @return True if successful connection is made
+     * @throws IOException If the connection is corrupted throws an exception
+     */
     public boolean connect(ConnectionDetail connectionDetail) throws IOException {
         this.connectionDetail = connectionDetail;
         client = new FTPClient();
@@ -43,6 +53,9 @@ public class FtpNet {
         return false;
     }
 
+    /**
+     * @return True when the FTP connection is alive
+     */
     public boolean isConnected(){
         if (client == null){
             return false;
@@ -51,6 +64,15 @@ public class FtpNet {
         }
     }
 
+    /**
+     * Called to upload a response file onto the FTP server
+     * @see Uploader#upload(DataRow[], boolean, boolean)
+     *
+     * @param file The response file
+     * @param connectionDetail The connection details (if reconnection is needed)
+     * @return True if successful
+     * @throws IOException If the connection is corrupted throws an exception
+     */
     public boolean upload(File file, ConnectionDetail connectionDetail) throws IOException {
         if (isConnected()){
             InputStream inputStream = new FileInputStream(file);
@@ -68,6 +90,12 @@ public class FtpNet {
         return connectionDetail;
     }
 
+    /**
+     * @see mdev.OrderProcessingSpring.shell.Commands#disconnectFromFtp(boolean)
+     *
+     * Called to brake the FTP connection
+     * @throws IOException If the connection is corrupted throws an exception
+     */
     public void disconnect() throws IOException {
         if (isConnected()){
             client.disconnect();

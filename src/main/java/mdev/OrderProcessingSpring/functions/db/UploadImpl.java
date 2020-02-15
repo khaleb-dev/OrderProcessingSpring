@@ -2,6 +2,7 @@ package mdev.OrderProcessingSpring.functions.db;
 
 import mdev.OrderProcessingSpring.utils.DataRow;
 import mdev.OrderProcessingSpring.utils.FinalVars;
+import mdev.OrderProcessingSpring.utils.IdDAO;
 import mdev.OrderProcessingSpring.utils.RowDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,6 +31,16 @@ public class UploadImpl implements RowDAO {
     @SuppressWarnings("FieldCanBeLocal")
     private final String INSERT_ROW = "INSERT INTO ";
 
+    /**
+     * Overrides (interface) RowDAOs createRow method
+     * @see RowDAO#createRow(DataRow[], DataRow, String)
+     *
+     * @param dataRows All of the validated rows
+     * @param dr The row that is being uploaded
+     * @param table The name of the table the row is being uploaded into
+     * @return True when the upload is successful
+     * @throws ParseException Can throw exception for the DateFormats (very rare, almost impossible)
+     */
     @Override
     public boolean createRow(DataRow[] dataRows, DataRow dr, String table) throws ParseException {
         String q = INSERT_ROW;

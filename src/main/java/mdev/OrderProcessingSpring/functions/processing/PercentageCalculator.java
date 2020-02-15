@@ -16,6 +16,12 @@ public class PercentageCalculator {
     @Autowired
     public FinalVars finalVars;
 
+    /**
+     * Called to calculated the validity percentage of an invalid file (~ a file that contains any kind of invalid data)
+     * @param drSize The number of the data rows recognized in the file
+     * @param validationErrors The validation errors in the file (NumberFormatExceptions will be ignored - they are totally invalid)
+     * @return The percentage
+     */
     public float calc(int drSize, ArrayList<ValidationError> validationErrors){
         float vP = 0.0f;
 

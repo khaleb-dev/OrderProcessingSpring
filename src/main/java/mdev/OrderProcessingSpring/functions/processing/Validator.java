@@ -23,6 +23,9 @@ import java.util.Locale;
 
 /**
  * @author markodevelopment (Mihálovics Márkó)
+ *
+ * The class where the file validation happens according to the task requirements..
+ *
  */
 @Component
 public class Validator {

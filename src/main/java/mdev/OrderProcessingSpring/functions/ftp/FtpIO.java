@@ -25,6 +25,20 @@ public class FtpIO {
     @Autowired
     public FinalVars finalVars;
 
+    /**
+     * Called to save the ftp login details
+     * @see mdev.OrderProcessingSpring.functions.CommandFunctions#saveFtp(String, int, String, String)
+     * @see Commands#saveFtpLogin(String, int, String, String)
+     *
+     * @param url The server host
+     * @param port The port
+     * @param name The username
+     * @param pass The password
+     * @return The result of the process
+     * @throws InvalidKeyException The cipher can throw this exception (used for password encoding)
+     * @throws BadPaddingException The cipher can throw this exception (used for password encoding)
+     * @throws IllegalBlockSizeException The cipher can throw this exception (used for password encoding)
+     */
     public String saveFtp(String url, int port, String name, String pass) throws InvalidKeyException, BadPaddingException,
             IllegalBlockSizeException {
         Properties p = new Properties();
@@ -37,6 +51,13 @@ public class FtpIO {
         return writeFtpDetails(p);
     }
 
+    /**
+     * If the FTP connection is already alive, OP creates a ConnectionDetail object which contains all of the
+     * login details, makes saving it easier..
+     * @param cd The connection details
+     * @return The process results
+     * @throws InvalidKeyException The cipher can throw this exception (used for password encoding)
+     */
     public String saveFtp(ConnectionDetail cd) throws InvalidKeyException {
         Properties p = new Properties();
         p.put(finalVars.FTP_SERVER_KEY, cd.getHost());
@@ -48,6 +69,11 @@ public class FtpIO {
         return writeFtpDetails(p);
     }
 
+    /**
+     * Writes the login details to a properties file and saves it
+     * @param p The properties to write into a file
+     * @return The results of the process
+     */
     private String writeFtpDetails(Properties p){
         FileOutputStream fos = null;
         try {
@@ -94,6 +120,9 @@ public class FtpIO {
         return "FTP login details saved!";
     }
 
+    /**
+     * Removes the saved details if the connection details file exists..
+     */
     public void removeFtp(){
         try{
             File f = new File(finalVars.FTP_CONNECTION_DETAILS_PROPERTIES_NAME + ".properties");
@@ -113,6 +142,10 @@ public class FtpIO {
         this.commands = commands;
     }
 
+    /**
+     * Called to load login details for auto login
+     * @return The ConnectionDetail object
+     */
     public ConnectionDetail loadFromFile(){
         ConnectionDetail cd = null;
         Properties p = new Properties();

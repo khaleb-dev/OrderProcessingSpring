@@ -47,6 +47,17 @@ public class Uploader {
     private ArrayList<UploadError> uploadFail;
     private ArrayList<String> uploadSuccess;
 
+    /**
+     * Called to upload data to the database from CommandFunctions
+     * @see mdev.OrderProcessingSpring.functions.CommandFunctions#upload(DataRow[], boolean, boolean)
+     * @see mdev.OrderProcessingSpring.shell.Commands#uploadFile(String, boolean, boolean)
+     *
+     * @param dataRows The not fully validated rows
+     *                 (number format exceptions are validated at reading the file but more validation is needed)
+     * @param uploadResponseToFtp True when the response is needed to be uploaded to the FTP server
+     * @param forceUpload True when the valid data is needed to be uploaded to the database from an invalid file
+     * @return The results of the process
+     */
     public String upload(DataRow[] dataRows, boolean uploadResponseToFtp, boolean forceUpload){
         init();
 
@@ -72,12 +83,22 @@ public class Uploader {
         return sb.toString();
     }
 
+    /**
+     * Initializes objects for the upload process
+     * @see #upload(DataRow[], boolean, boolean)
+     */
     private void init(){
         sb = new StringBuilder();
         uploadFail = new ArrayList<>();
         uploadSuccess = new ArrayList<>();
     }
 
+    /**
+     * Generates some validity info about the file
+     * @param forceUpload True when the valid data is needed to be uploaded to the database from an invalid file
+     * @param drSize The size of the not validated data list
+     * @return Validity information
+     */
     private String validity(boolean forceUpload, int drSize){
         StringBuilder sb = new StringBuilder();
         if (validator.isValid()){
@@ -96,6 +117,11 @@ public class Uploader {
         return sb.toString();
     }
 
+    /**
+     * Generates info about the FTP upload process
+     * @param uploadResponseToFtp True when the response is needed to be uploaded to the FTP server
+     * @return FTP upload information
+     */
     private String ftpUpload(boolean uploadResponseToFtp){
         if (uploadResponseToFtp){
             return "\n\nThe results will be uploaded to your ftp server as a responseFile.";
@@ -104,6 +130,10 @@ public class Uploader {
                 "\nIf you want to upload the results to an ftp server, please enable the \"-R\" parameter.";
     }
 
+    /**
+     * Called to save and upload the results of the db upload to an FTP
+     * @return The FTP upload results
+     */
     private String ftp(){
         StringBuilder result = new StringBuilder();
 
@@ -129,6 +159,11 @@ public class Uploader {
         return result.toString();
     }
 
+    /**
+     * Uploads a file to the FTP server
+     * @return The process results
+     * @throws IOException Can throw exception if the file or the connection or the process is corrupted
+     */
     private boolean ftpU() throws IOException {
         return ftpNet.upload(resultWriter.write(
                 uploadFail,
@@ -137,6 +172,12 @@ public class Uploader {
                 ftpNet.getConnectionDetail());
     }
 
+    /**
+     * Called to upload data into the database
+     * @param dataRows Validated correct data
+     * @return The results of the process (for printing purposes in the CLI)
+     * @throws ParseException Can throw exception for the DateFormats (very rare, almost impossible)
+     */
     private String db(DataRow[] dataRows) throws ParseException {
         StringBuilder result = new StringBuilder();
 
