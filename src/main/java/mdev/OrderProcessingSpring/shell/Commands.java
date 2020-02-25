@@ -4,7 +4,7 @@ import mdev.OrderProcessingSpring.functions.CommandFunctions;
 import mdev.OrderProcessingSpring.functions.ftp.ConnectionDetail;
 import mdev.OrderProcessingSpring.functions.ftp.FtpIO;
 import mdev.OrderProcessingSpring.functions.ftp.FtpNet;
-import mdev.OrderProcessingSpring.utils.FinalVars;
+import mdev.OrderProcessingSpring.utils.vars.OPConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -23,7 +23,7 @@ import java.util.Base64;
 @ShellComponent
 public class Commands {
 
-    private final FinalVars finalVars;
+    private final OPConfig OPConfig;
     private final FtpNet ftpNet;
     private final FtpIO ftpIO;
     private final CommandFunctions commandFunctions;
@@ -31,12 +31,12 @@ public class Commands {
 
     @Autowired
     public Commands(CommandFunctions commandFunctions, ShellUsrEX shellUsrEX,
-                    FtpNet ftpNet, FinalVars finalVars, FtpIO ftpIO) {
+                    FtpNet ftpNet, OPConfig OPConfig, FtpIO ftpIO) {
         this.commandFunctions = commandFunctions;
         commandFunctions.setCommands(this);
         this.shellUsrEX = shellUsrEX;
         this.ftpNet = ftpNet;
-        this.finalVars = finalVars;
+        this.OPConfig = OPConfig;
         this.ftpIO = ftpIO;
     }
 
@@ -85,7 +85,7 @@ public class Commands {
             try{
                 portInt = Integer.parseInt(port);
             }catch (Exception ex){
-                portInt = finalVars.DEFAULT_FTP_PORT;
+                portInt = OPConfig.DEFAULT_FTP_PORT;
             }
             try {
                 return normalFtpConnection(host, portInt, name, pass, saveDetails);
@@ -126,11 +126,11 @@ public class Commands {
     }
 
     private String normalFtpConnection(String host, int p, String name, String pass, boolean save) throws InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        finalVars.getCipher().init(Cipher.ENCRYPT_MODE, finalVars.getcKey());
+        OPConfig.getCipher().init(Cipher.ENCRYPT_MODE, OPConfig.getcKey());
         try {
             ConnectionDetail connectionDetail = new ConnectionDetail(host, p, name,
                     new String(Base64.getEncoder()
-                            .encode(finalVars.getCipher().doFinal(pass.getBytes()))));
+                            .encode(OPConfig.getCipher().doFinal(pass.getBytes()))));
 
             String saveStatus = "\n";
             if (save){

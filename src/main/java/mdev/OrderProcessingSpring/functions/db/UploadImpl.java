@@ -1,7 +1,8 @@
 package mdev.OrderProcessingSpring.functions.db;
 
 import mdev.OrderProcessingSpring.utils.Order;
-import mdev.OrderProcessingSpring.utils.FinalVars;
+import mdev.OrderProcessingSpring.utils.vars.DataBaseVars;
+import mdev.OrderProcessingSpring.utils.vars.Headers;
 import mdev.OrderProcessingSpring.utils.OrderDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,13 +20,16 @@ import java.util.Calendar;
 public class UploadImpl implements OrderDAO {
 
     @Autowired
-    ValueCounter valueCounter;
+    public ValueCounter valueCounter;
 
     @Autowired
-    FinalVars finalVars;
+    public Headers headers;
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    public DataBaseVars dataBaseVars;
+
+    @Autowired
+    public JdbcTemplate jdbcTemplate;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final String INSERT_ROW = "INSERT INTO ";
@@ -43,30 +47,30 @@ public class UploadImpl implements OrderDAO {
     @Override
     public boolean createRow(Order[] orders, Order order, String table) throws ParseException {
         String query = INSERT_ROW;
-        if (table.equals(finalVars.ORDER_TABLE)){
-            query += finalVars.ORDER_TABLE + "(`" + finalVars.HEADER_ORDER_ID + "`, " +
-                    "`" + finalVars.HEADER_BUYER_NAME + "`, " +
-                    "`" + finalVars.HEADER_BUYER_EMAIL + "`, " +
-                    "`" + finalVars.HEADER_ORDER_DATE + "`, " +
-                    "`" + finalVars.ORDER_TOTAL_VALUE + "`, " +
-                    "`" + finalVars.HEADER_ADDRESS + "`, " +
-                    "`" + finalVars.HEADER_POSTCODE + "`) " +
+        if (table.equals(dataBaseVars.ORDER_TABLE)){
+            query += dataBaseVars.ORDER_TABLE + "(`" + headers.HEADER_ORDER_ID + "`, " +
+                    "`" + headers.HEADER_BUYER_NAME + "`, " +
+                    "`" + headers.HEADER_BUYER_EMAIL + "`, " +
+                    "`" + headers.HEADER_ORDER_DATE + "`, " +
+                    "`" + headers.ORDER_TOTAL_VALUE + "`, " +
+                    "`" + headers.HEADER_ADDRESS + "`, " +
+                    "`" + headers.HEADER_POSTCODE + "`) " +
                     "VALUES(?, ?, ?, ?, ?, ?, ?)";
 
             return jdbcTemplate.update(query, order.getOrderId(), order.getBuyerName(), order.getBuyerEmail(),
                     (order.getOrderDate().isEmpty() ?
                             new Date(Calendar.getInstance().getTime().getTime()) :
-                            new Date(new SimpleDateFormat(finalVars.DATE_FORMAT).parse(order.getOrderDate()).getTime())),
+                            new Date(new SimpleDateFormat(dataBaseVars.DATE_FORMAT).parse(order.getOrderDate()).getTime())),
                     valueCounter.getOrderTotalValue(order.getOrderId(), orders), order.getAddress(), order.getPostcode()) > 0;
 
-        }else if(table.equals(finalVars.ORDER_ITEM_TABLE)){
-            query += finalVars.ORDER_ITEM_TABLE + "(`" + finalVars.HEADER_ORDER_ITEM_ID + "`, " +
-                            "`" + finalVars.HEADER_ORDER_ID + "`, " +
-                            "`" + finalVars.HEADER_SALE_PRICE + "`, " +
-                            "`" + finalVars.HEADER_SHIPPING_PRICE + "`, " +
-                            "`" + finalVars.ORDER_ITEM_TOTAL_VALUE + "`, " +
-                            "`" + finalVars.HEADER_SKU + "`, " +
-                            "`" + finalVars.HEADER_STATUS + "`) "+
+        }else if(table.equals(dataBaseVars.ORDER_ITEM_TABLE)){
+            query += dataBaseVars.ORDER_ITEM_TABLE + "(`" + headers.HEADER_ORDER_ITEM_ID + "`, " +
+                            "`" + headers.HEADER_ORDER_ID + "`, " +
+                            "`" + headers.HEADER_SALE_PRICE + "`, " +
+                            "`" + headers.HEADER_SHIPPING_PRICE + "`, " +
+                            "`" + headers.ORDER_ITEM_TOTAL_VALUE + "`, " +
+                            "`" + headers.HEADER_SKU + "`, " +
+                            "`" + headers.HEADER_STATUS + "`) "+
                             "VALUES(?, ?, ?, ?, ?, ?, ?)";
 
             return jdbcTemplate.update(query, order.getOrderItemId(), order.getOrderId(),

@@ -3,6 +3,7 @@ package mdev.OrderProcessingSpring.shell;
 /**
  * @author markodevelopment (Mihálovics Márkó)
  */
+@SuppressWarnings("unused")
 public enum ShellUXDesign {
 
     BLACK(0),

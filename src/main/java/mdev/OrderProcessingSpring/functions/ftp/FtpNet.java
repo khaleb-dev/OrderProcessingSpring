@@ -2,7 +2,7 @@ package mdev.OrderProcessingSpring.functions.ftp;
 
 import mdev.OrderProcessingSpring.functions.db.Uploader;
 import mdev.OrderProcessingSpring.utils.Order;
-import mdev.OrderProcessingSpring.utils.FinalVars;
+import mdev.OrderProcessingSpring.utils.vars.OPConfig;
 import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,7 +28,7 @@ public class FtpNet {
     private FTPClient client;
 
     @Autowired
-    public FinalVars finalVars;
+    public OPConfig OPConfig;
 
     /**
      * Called to connect to an FTP server
@@ -43,8 +43,8 @@ public class FtpNet {
         client = new FTPClient();
         client.connect(connectionDetail.getHost(), connectionDetail.getPort());
         try {
-            finalVars.getCipher().init(Cipher.DECRYPT_MODE, finalVars.getcKey());
-            String decrypted = new String(finalVars.getCipher().doFinal(
+            OPConfig.getCipher().init(Cipher.DECRYPT_MODE, OPConfig.getcKey());
+            String decrypted = new String(OPConfig.getCipher().doFinal(
                     Base64.getDecoder().decode(connectionDetail.getPass().getBytes())));
             return client.login(connectionDetail.getName(), decrypted);
         } catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {

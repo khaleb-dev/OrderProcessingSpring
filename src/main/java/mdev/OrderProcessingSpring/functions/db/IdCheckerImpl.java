@@ -1,6 +1,6 @@
 package mdev.OrderProcessingSpring.functions.db;
 
-import mdev.OrderProcessingSpring.utils.FinalVars;
+import mdev.OrderProcessingSpring.utils.vars.DataBaseVars;
 import mdev.OrderProcessingSpring.utils.IdDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class IdCheckerImpl implements IdDAO {
 
     @Autowired
-    public FinalVars finalVars;
+    public DataBaseVars dataBaseVars;
 
     @Autowired
     public JdbcTemplate jdbcTemplate;
@@ -27,9 +27,9 @@ public class IdCheckerImpl implements IdDAO {
      */
     @Override
     public boolean validOrderItemId(int id){
-        return idExists("SELECT COUNT(1) AS \"" + finalVars.ID_CHECK_RES_AS + "\" FROM " +
-                finalVars.ORDER_ITEM_TABLE +
-                " WHERE " + finalVars.ORDER_ITEM_ID_COLUMN +
+        return idExists("SELECT COUNT(1) AS \"" + dataBaseVars.ID_CHECK_RES_AS + "\" FROM " +
+                dataBaseVars.ORDER_ITEM_TABLE +
+                " WHERE " + dataBaseVars.ORDER_ITEM_ID_COLUMN +
                 " = " +
                 id);
     }
@@ -43,9 +43,9 @@ public class IdCheckerImpl implements IdDAO {
      */
     @Override
     public boolean validOrderIdInUse(int id){
-        return idExists("SELECT COUNT(1) AS \"" + finalVars.ID_CHECK_RES_AS + "\" FROM " +
-                finalVars.ORDER_TABLE +
-                " WHERE " + finalVars.ORDER_ID_COLUMN +
+        return idExists("SELECT COUNT(1) AS \"" + dataBaseVars.ID_CHECK_RES_AS + "\" FROM " +
+                dataBaseVars.ORDER_TABLE +
+                " WHERE " + dataBaseVars.ORDER_ID_COLUMN +
                 " = " +
                 id);
     }
@@ -63,7 +63,7 @@ public class IdCheckerImpl implements IdDAO {
         return jdbcTemplate.query(query, resultSet -> {
             boolean contains = false;
             while(resultSet.next()){
-                contains = resultSet.getInt(finalVars.ID_CHECK_RES_AS) == 1;
+                contains = resultSet.getInt(dataBaseVars.ID_CHECK_RES_AS) == 1;
             }
             return contains;
         });

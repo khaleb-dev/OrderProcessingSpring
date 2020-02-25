@@ -1,7 +1,7 @@
 package mdev.OrderProcessingSpring.functions.processing;
 
 import mdev.OrderProcessingSpring.utils.Order;
-import mdev.OrderProcessingSpring.utils.FinalVars;
+import mdev.OrderProcessingSpring.utils.vars.ErrorCodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class ErrorMessageCreator {
 
     @Autowired
-    public FinalVars finalVars;
+    public ErrorCodes errorCodes;
 
     public String create(
             boolean email, boolean fill, boolean date,
@@ -23,25 +23,25 @@ public class ErrorMessageCreator {
         message += numberFormats(dr);
         message += fillErrors(fill, dr);
         if (!email){
-            message += "\n" + finalVars.ERROR_EMAIL;
+            message += "\n" + errorCodes.ERROR_EMAIL;
         }
         if (!date){
-            message += "\n" + finalVars.ERROR_DATE;
+            message += "\n" + errorCodes.ERROR_DATE;
         }
         if (!shippingPrice){
-            message += "\n" + finalVars.ERROR_SHIPPING_PRICE;
+            message += "\n" + errorCodes.ERROR_SHIPPING_PRICE;
         }
         if (!salePrice){
-            message += "\n" + finalVars.ERROR_SALE_PRICE;
+            message += "\n" + errorCodes.ERROR_SALE_PRICE;
         }
         if (!status){
-            message += "\n" + finalVars.ERROR_STATUS;
+            message += "\n" + errorCodes.ERROR_STATUS;
         }
         if (!orderItemId){
-            message += "\n" + finalVars.ERROR_ORDER_ITEM_ID;
+            message += "\n" + errorCodes.ERROR_ORDER_ITEM_ID;
         }
         if (!orderId){
-            message += "\n" + finalVars.ERROR_ORDER__ID;
+            message += "\n" + errorCodes.ERROR_ORDER__ID;
         }
         return message + "\n";
     }
@@ -49,7 +49,7 @@ public class ErrorMessageCreator {
     private String fillErrors(boolean fill, Order dr){
         String message = "";
         if (!fill){
-            message += "\n" + finalVars.ERROR_FILL + " ";
+            message += "\n" + errorCodes.ERROR_FILL + " ";
             if (dr.getBuyerEmail().isEmpty()){
                 message += "| BuyerEmail ";
             }
@@ -73,10 +73,10 @@ public class ErrorMessageCreator {
     private String numberFormats(Order dr){
         String message = "";
         if (dr.getPostcode() == -1){
-            message += "\n" + finalVars.ERROR_POSTCODE;
+            message += "\n" + errorCodes.ERROR_POSTCODE;
         }
         if (dr.getLineNumber() == -1){
-            message += "\n" + finalVars.ERROR_NUMBER_FORMAT;
+            message += "\n" + errorCodes.ERROR_NUMBER_FORMAT;
         }
         return message;
     }

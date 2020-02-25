@@ -1,13 +1,19 @@
 package mdev.OrderProcessingSpring.functions.ftp;
 
+import ch.qos.logback.classic.Logger;
 import mdev.OrderProcessingSpring.OPSpringApp;
+import mdev.OrderProcessingSpring.functions.db.Uploader;
 import mdev.OrderProcessingSpring.shell.ShellUsrEX;
-import mdev.OrderProcessingSpring.utils.FinalVars;
 import mdev.OrderProcessingSpring.utils.UploadError;
 import mdev.OrderProcessingSpring.utils.ValidationError;
+import mdev.OrderProcessingSpring.utils.vars.DataBaseVars;
+import mdev.OrderProcessingSpring.utils.vars.Headers;
+import mdev.OrderProcessingSpring.utils.vars.StatusCodes;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -22,8 +28,21 @@ import java.util.Date;
 @Component
 public class ResultWriter {
 
+    private Logger logger;
+
+    @PostConstruct
+    public void initLogger(){
+        logger = (Logger) LoggerFactory.getLogger(ResultWriter.class);
+    }
+
     @Autowired
-    public FinalVars finalVars;
+    public StatusCodes statusCodes;
+
+    @Autowired
+    public Headers headers;
+
+    @Autowired
+    public DataBaseVars dataBaseVars;
 
     @Autowired
     public ShellUsrEX shellUsrEX;
@@ -38,9 +57,9 @@ public class ResultWriter {
     public File write(ArrayList<UploadError> uploadErrors,
                       ArrayList<String> uploadSuccess,
                       ArrayList<ValidationError> validationErrors){
-        StringBuilder builder = new StringBuilder(finalVars.HEADER_LINE_NUMBER + ";" +
-                finalVars.HEADER_MESSAGE + ";" +
-                finalVars.HEADER_STATUS + "\n");
+        StringBuilder builder = new StringBuilder(headers.HEADER_LINE_NUMBER + ";" +
+                headers.HEADER_MESSAGE + ";" +
+                headers.HEADER_STATUS + "\n");
 
         if (uploadSuccess != null){
             builder.append(formatUS(uploadSuccess));
@@ -64,7 +83,7 @@ public class ResultWriter {
                     .append(";")
                     .append(ue.getMes().replaceAll("\n", " "))
                     .append(";")
-                    .append(finalVars.STATUS_ERROR)
+                    .append(statusCodes.STATUS_ERROR)
                     .append("\n");
         }
         return builder.toString();
@@ -76,7 +95,7 @@ public class ResultWriter {
             builder.append(s)
                     .append(";")
                     .append(";")
-                    .append(finalVars.STATUS_OK)
+                    .append(statusCodes.STATUS_OK)
                     .append("\n");
         }
         return builder.toString();
@@ -107,7 +126,7 @@ public class ResultWriter {
             bw.append(data);
             bw.close();
         } catch (IOException e) {
-            OPSpringApp.log.error(shellUsrEX.getErrorMessage(e.toString()));
+            logger.error(shellUsrEX.getErrorMessage(e.toString()));
             return null;
         }
         return file;
@@ -117,7 +136,7 @@ public class ResultWriter {
      * @return Generated file name
      */
     private String getFileName(){
-        SimpleDateFormat dateFormat = new SimpleDateFormat(finalVars.DATE_FORMAT);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(dataBaseVars.DATE_FORMAT);
         Date date = new Date(System.currentTimeMillis());
         return dateFormat.format(date) + "_upload_response.csv";
     }

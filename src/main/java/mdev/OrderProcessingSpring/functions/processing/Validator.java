@@ -1,16 +1,21 @@
 package mdev.OrderProcessingSpring.functions.processing;
 
+import ch.qos.logback.classic.Logger;
 import mdev.OrderProcessingSpring.OPSpringApp;
+import mdev.OrderProcessingSpring.functions.db.Uploader;
 import mdev.OrderProcessingSpring.shell.Commands;
 import mdev.OrderProcessingSpring.shell.ShellUsrEX;
 import mdev.OrderProcessingSpring.utils.Order;
-import mdev.OrderProcessingSpring.utils.FinalVars;
 import mdev.OrderProcessingSpring.utils.IdDAO;
 import mdev.OrderProcessingSpring.utils.ValidationError;
+import mdev.OrderProcessingSpring.utils.vars.DataBaseVars;
+import mdev.OrderProcessingSpring.utils.vars.StatusCodes;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.time.LocalDate;
@@ -30,8 +35,18 @@ import java.util.Locale;
 @Component
 public class Validator {
 
+    private Logger logger;
+
+    @PostConstruct
+    public void initLogger(){
+        logger = (Logger) LoggerFactory.getLogger(Validator.class);
+    }
+
     @Autowired
-    public FinalVars finalVars;
+    public StatusCodes statusCodes;
+
+    @Autowired
+    public DataBaseVars dataBaseVars;
 
     @Autowired
     public ShellUsrEX shellUsrEX;
@@ -90,7 +105,7 @@ public class Validator {
         setBools(order);
 
         if (checkEmpty(order.getOrderDate())){
-            date = validDate(finalVars.DATE_FORMAT, order.getOrderDate(), Locale.ENGLISH);
+            date = validDate(dataBaseVars.DATE_FORMAT, order.getOrderDate(), Locale.ENGLISH);
         }else{
             date = true;
         }
@@ -101,7 +116,7 @@ public class Validator {
             String errorMessage = errorMessageCreator.create(email, fill, date, shippingPrice,
                     salePrice, status, orderItemId, orderId, order);
             validationErrors.add(new ValidationError(order.getLineNumber(),
-                    errorMessage, finalVars.STATUS_ERROR));
+                    errorMessage, statusCodes.STATUS_ERROR));
         }else{
             validData.add(order);
         }
@@ -155,7 +170,7 @@ public class Validator {
             InternetAddress emailAddr = new InternetAddress(email);
             emailAddr.validate();
         } catch (AddressException ex) {
-            OPSpringApp.log.debug(commands.shellUsrEX.getInfoMessage(ex.toString()));
+            logger.debug(commands.shellUsrEX.getInfoMessage(ex.toString()));
             result = false;
         }
         return result;
@@ -179,19 +194,19 @@ public class Validator {
             String result = dateTime.format(formatter);
             return result.equals(value);
         } catch (DateTimeParseException dtpe) {
-            OPSpringApp.log.debug(commands.shellUsrEX.getInfoMessage(dtpe.toString()));
+            logger.debug(commands.shellUsrEX.getInfoMessage(dtpe.toString()));
             try {
                 LocalDate localDate = LocalDate.parse(value, formatter);
                 String result = localDate.format(formatter);
                 return result.equals(value);
             } catch (DateTimeParseException dtpe1) {
-                OPSpringApp.log.debug(commands.shellUsrEX.getInfoMessage(dtpe1.toString()));
+                logger.debug(commands.shellUsrEX.getInfoMessage(dtpe1.toString()));
                 try {
                     LocalTime localTime = LocalTime.parse(value, formatter);
                     String result = localTime.format(formatter);
                     return result.equals(value);
                 } catch (DateTimeParseException dtpe2) {
-                    OPSpringApp.log.debug(commands.shellUsrEX.getInfoMessage(dtpe2.toString()));
+                    logger.debug(commands.shellUsrEX.getInfoMessage(dtpe2.toString()));
                 }
             }
         }
@@ -208,8 +223,8 @@ public class Validator {
     }
 
     private boolean validStatus(String status){
-        return status.equals(finalVars.STATUS_IN) ||
-                status.equals(finalVars.STATUS_OUT);
+        return status.equals(statusCodes.STATUS_IN) ||
+                status.equals(statusCodes.STATUS_OUT);
     }
 
     private boolean validOrderItemIdInUse(int id) {

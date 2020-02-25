@@ -1,13 +1,24 @@
 package mdev.OrderProcessingSpring.utils;
 
-import mdev.OrderProcessingSpring.OPSpringApp;
+import ch.qos.logback.classic.Logger;
+import mdev.OrderProcessingSpring.functions.db.Uploader;
 import mdev.OrderProcessingSpring.shell.ShellUsrEX;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.PostConstruct;
 
 /**
  * @author markodevelopment (Mihálovics Márkó)
  */
 @SuppressWarnings("unused")
 public class Order {
+
+    private Logger logger;
+
+    @PostConstruct
+    public void initLogger(){
+        logger = (Logger) LoggerFactory.getLogger(Order.class);
+    }
 
     private String LineNumber, OrderItemId, OrderId, Postcode;
     private String SalePrice, ShippingPrice;
@@ -24,7 +35,7 @@ public class Order {
             return Integer.parseInt(LineNumber);
         }catch (Exception ex){
             if (warn){
-                OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + LineNumber));
+                logger.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + LineNumber));
             }
         }
         return -1;
@@ -35,7 +46,7 @@ public class Order {
             return Integer.parseInt(OrderItemId);
         }catch (Exception ex){
             if (warn){
-                OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+                logger.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
             }
         }
         return -1;
@@ -46,7 +57,7 @@ public class Order {
             return Integer.parseInt(OrderId);
         }catch (Exception ex){
             if (warn){
-                OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+                logger.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
             }
         }
         return -1;
@@ -57,7 +68,7 @@ public class Order {
             return Integer.parseInt(Postcode);
         }catch (Exception ex){
             if (warn){
-                OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+                logger.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
             }
         }
         return -1;
@@ -68,7 +79,7 @@ public class Order {
             return Float.parseFloat(SalePrice);
         }catch (Exception ex){
             if (warn){
-                OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+                logger.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
             }
         }
         return -1;
@@ -79,7 +90,7 @@ public class Order {
             return Float.parseFloat(ShippingPrice);
         }catch (Exception ex){
             if (warn){
-                OPSpringApp.log.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
+                logger.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
             }
         }
         return -1;

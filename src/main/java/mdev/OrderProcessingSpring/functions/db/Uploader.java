@@ -1,18 +1,20 @@
 package mdev.OrderProcessingSpring.functions.db;
 
-import mdev.OrderProcessingSpring.OPSpringApp;
+import ch.qos.logback.classic.Logger;
 import mdev.OrderProcessingSpring.functions.ftp.FtpNet;
 import mdev.OrderProcessingSpring.functions.ftp.ResultWriter;
 import mdev.OrderProcessingSpring.functions.processing.Validator;
 import mdev.OrderProcessingSpring.shell.ShellUsrEX;
 import mdev.OrderProcessingSpring.utils.Order;
-import mdev.OrderProcessingSpring.utils.FinalVars;
 import mdev.OrderProcessingSpring.utils.OrderDAO;
 import mdev.OrderProcessingSpring.utils.UploadError;
+import mdev.OrderProcessingSpring.utils.vars.DataBaseVars;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -22,6 +24,13 @@ import java.util.ArrayList;
  */
 @Component
 public class Uploader {
+
+    private Logger logger;
+
+    @PostConstruct
+    public void initLogger(){
+        logger = (Logger) LoggerFactory.getLogger(Uploader.class);
+    }
 
     @Autowired
     public FtpNet ftpNet;
@@ -33,9 +42,7 @@ public class Uploader {
     public ApplicationContext context;
 
     @Autowired
-    public FinalVars finalVars;
-
-
+    public DataBaseVars dataBaseVars;
 
     @Autowired
     public ShellUsrEX shellUsrEX;
@@ -72,7 +79,7 @@ public class Uploader {
                 stringBuilder.append(db(validator.getValidData()));
             }
         } catch (ParseException e) {
-            OPSpringApp.log.error(shellUsrEX.getErrorMessage(e.toString()));
+            logger.error(shellUsrEX.getErrorMessage(e.toString()));
         }
 
         if (uploadResponseToFTP){
@@ -144,7 +151,7 @@ public class Uploader {
                             "\nResponse uploaded to the FTP server successfully!" :
                             "\nFailed to upload the response to the FTP server!");
             } catch (IOException e) {
-                OPSpringApp.log.error(shellUsrEX.getErrorMessage(e.toString()));
+                logger.error(shellUsrEX.getErrorMessage(e.toString()));
             }
         }else{
             try {
@@ -152,7 +159,7 @@ public class Uploader {
                         "\nResponse uploaded to the FTP server successfully!" :
                         "\nFailed to upload the response to the FTP server!");
             } catch (IOException e) {
-                OPSpringApp.log.error(shellUsrEX.getErrorMessage(e.toString()));
+                logger.error(shellUsrEX.getErrorMessage(e.toString()));
             }
         }
 
@@ -183,8 +190,8 @@ public class Uploader {
 
         OrderDAO orderDAO = context.getBean(OrderDAO.class);
         for (Order order : orders){
-            boolean u1 = orderDAO.createRow(orders, order, finalVars.ORDER_TABLE);
-            boolean u2 = orderDAO.createRow(orders, order, finalVars.ORDER_ITEM_TABLE);
+            boolean u1 = orderDAO.createRow(orders, order, dataBaseVars.ORDER_TABLE);
+            boolean u2 = orderDAO.createRow(orders, order, dataBaseVars.ORDER_ITEM_TABLE);
 
             if(!u1){
                 result.append("\nUpload failed when uploading row with OrderId(")

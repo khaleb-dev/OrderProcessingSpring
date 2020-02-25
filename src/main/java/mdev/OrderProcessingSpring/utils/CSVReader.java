@@ -1,7 +1,9 @@
 package mdev.OrderProcessingSpring.utils;
 
-import mdev.OrderProcessingSpring.OPSpringApp;
+import ch.qos.logback.classic.Logger;
+import mdev.OrderProcessingSpring.functions.db.Uploader;
 import mdev.OrderProcessingSpring.shell.Commands;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.supercsv.cellprocessor.ConvertNullTo;
 import org.supercsv.cellprocessor.ift.CellProcessor;
@@ -9,6 +11,7 @@ import org.supercsv.io.CsvBeanReader;
 import org.supercsv.io.ICsvBeanReader;
 import org.supercsv.prefs.CsvPreference;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -20,6 +23,13 @@ import java.util.List;
 @Component
 public class CSVReader {
 
+    private Logger logger;
+
+    @PostConstruct
+    public void initLogger(){
+        logger = (Logger) LoggerFactory.getLogger(CSVReader.class);
+    }
+
     private Commands commands;
 
     public Order[] readFile(File file) {
@@ -28,10 +38,10 @@ public class CSVReader {
             final String[] headers = reader.getHeader(true);
             final CellProcessor[] processors = getProcessors();
             Order csvBean;
-            OPSpringApp.log.debug(commands.shellUsrEX.getInfoMessage("LineNumber;OrderItemId;OrderId;BuyerName;BuyerEmail;Address;Postcode;SalePrice;ShippingPrice;SKU;Status;OrderDate"));
+            logger.debug(commands.shellUsrEX.getInfoMessage("LineNumber;OrderItemId;OrderId;BuyerName;BuyerEmail;Address;Postcode;SalePrice;ShippingPrice;SKU;Status;OrderDate"));
             while ((csvBean = reader.read(Order.class, headers, processors)) != null) {
                 csvBean.setShellUsrEX(commands.shellUsrEX);
-                OPSpringApp.log.debug(commands.shellUsrEX.getInfoMessage(
+                logger.debug(commands.shellUsrEX.getInfoMessage(
                                 csvBean.getLineNumber() + ";" +
                                 csvBean.getOrderItemId() + ";" +
                                 csvBean.getOrderId() + ";" +
@@ -56,7 +66,7 @@ public class CSVReader {
 
             return orders;
         }catch (Exception ex){
-            OPSpringApp.log.error(commands.shellUsrEX.getErrorMessage(ex.toString()));
+            logger.error(commands.shellUsrEX.getErrorMessage(ex.toString()));
             return null;
         }
     }
