@@ -1,8 +1,6 @@
 package mdev.OrderProcessingSpring.functions.ftp;
 
 import ch.qos.logback.classic.Logger;
-import mdev.OrderProcessingSpring.OPSpringApp;
-import mdev.OrderProcessingSpring.functions.db.Uploader;
 import mdev.OrderProcessingSpring.shell.ShellUsrEX;
 import mdev.OrderProcessingSpring.utils.UploadError;
 import mdev.OrderProcessingSpring.utils.ValidationError;

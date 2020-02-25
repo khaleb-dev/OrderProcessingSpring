@@ -1,12 +1,10 @@
 package mdev.OrderProcessingSpring.functions.processing;
 
 import ch.qos.logback.classic.Logger;
-import mdev.OrderProcessingSpring.OPSpringApp;
-import mdev.OrderProcessingSpring.functions.db.Uploader;
 import mdev.OrderProcessingSpring.shell.Commands;
 import mdev.OrderProcessingSpring.shell.ShellUsrEX;
-import mdev.OrderProcessingSpring.utils.Order;
 import mdev.OrderProcessingSpring.utils.IdDAO;
+import mdev.OrderProcessingSpring.utils.Order;
 import mdev.OrderProcessingSpring.utils.ValidationError;
 import mdev.OrderProcessingSpring.utils.vars.DataBaseVars;
 import mdev.OrderProcessingSpring.utils.vars.StatusCodes;

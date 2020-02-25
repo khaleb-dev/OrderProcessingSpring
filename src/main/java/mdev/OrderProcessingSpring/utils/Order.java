@@ -1,7 +1,6 @@
 package mdev.OrderProcessingSpring.utils;
 
 import ch.qos.logback.classic.Logger;
-import mdev.OrderProcessingSpring.functions.db.Uploader;
 import mdev.OrderProcessingSpring.shell.ShellUsrEX;
 import org.slf4j.LoggerFactory;
 
