@@ -1,6 +1,6 @@
 package mdev.OrderProcessingSpring.functions.processing;
 
-import mdev.OrderProcessingSpring.utils.DataRow;
+import mdev.OrderProcessingSpring.utils.Order;
 import mdev.OrderProcessingSpring.utils.FinalVars;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ public class ErrorMessageCreator {
     public String create(
             boolean email, boolean fill, boolean date,
             boolean shippingPrice, boolean salePrice, boolean status,
-            boolean orderItemId, boolean orderId, DataRow dr){
+            boolean orderItemId, boolean orderId, Order dr){
         String message = "\nError(s) while trying to upload the row with the \"" +
                 dr.getLineNumber() + "\" line number.";
         message += numberFormats(dr);
@@ -46,7 +46,7 @@ public class ErrorMessageCreator {
         return message + "\n";
     }
 
-    private String fillErrors(boolean fill, DataRow dr){
+    private String fillErrors(boolean fill, Order dr){
         String message = "";
         if (!fill){
             message += "\n" + finalVars.ERROR_FILL + " ";
@@ -70,7 +70,7 @@ public class ErrorMessageCreator {
         return message;
     }
 
-    private String numberFormats(DataRow dr){
+    private String numberFormats(Order dr){
         String message = "";
         if (dr.getPostcode() == -1){
             message += "\n" + finalVars.ERROR_POSTCODE;

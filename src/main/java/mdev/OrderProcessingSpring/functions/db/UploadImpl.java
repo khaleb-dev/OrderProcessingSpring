@@ -1,9 +1,8 @@
 package mdev.OrderProcessingSpring.functions.db;
 
-import mdev.OrderProcessingSpring.utils.DataRow;
+import mdev.OrderProcessingSpring.utils.Order;
 import mdev.OrderProcessingSpring.utils.FinalVars;
-import mdev.OrderProcessingSpring.utils.IdDAO;
-import mdev.OrderProcessingSpring.utils.RowDAO;
+import mdev.OrderProcessingSpring.utils.OrderDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -17,7 +16,7 @@ import java.util.Calendar;
  * @author markodevelopment (Mihálovics Márkó)
  */
 @Component
-public class UploadImpl implements RowDAO {
+public class UploadImpl implements OrderDAO {
 
     @Autowired
     ValueCounter valueCounter;
@@ -33,19 +32,19 @@ public class UploadImpl implements RowDAO {
 
     /**
      * Overrides (interface) RowDAOs createRow method
-     * @see RowDAO#createRow(DataRow[], DataRow, String)
+     * @see OrderDAO#createRow(Order[], Order, String)
      *
-     * @param dataRows All of the validated rows
-     * @param dr The row that is being uploaded
+     * @param orders All of the validated rows
+     * @param order The row that is being uploaded
      * @param table The name of the table the row is being uploaded into
      * @return True when the upload is successful
      * @throws ParseException Can throw exception for the DateFormats (very rare, almost impossible)
      */
     @Override
-    public boolean createRow(DataRow[] dataRows, DataRow dr, String table) throws ParseException {
-        String q = INSERT_ROW;
+    public boolean createRow(Order[] orders, Order order, String table) throws ParseException {
+        String query = INSERT_ROW;
         if (table.equals(finalVars.ORDER_TABLE)){
-            q += finalVars.ORDER_TABLE + "(`" + finalVars.HEADER_ORDER_ID + "`, " +
+            query += finalVars.ORDER_TABLE + "(`" + finalVars.HEADER_ORDER_ID + "`, " +
                     "`" + finalVars.HEADER_BUYER_NAME + "`, " +
                     "`" + finalVars.HEADER_BUYER_EMAIL + "`, " +
                     "`" + finalVars.HEADER_ORDER_DATE + "`, " +
@@ -54,14 +53,14 @@ public class UploadImpl implements RowDAO {
                     "`" + finalVars.HEADER_POSTCODE + "`) " +
                     "VALUES(?, ?, ?, ?, ?, ?, ?)";
 
-            return jdbcTemplate.update(q, dr.getOrderId(), dr.getBuyerName(), dr.getBuyerEmail(),
-                    (dr.getOrderDate().isEmpty() ?
+            return jdbcTemplate.update(query, order.getOrderId(), order.getBuyerName(), order.getBuyerEmail(),
+                    (order.getOrderDate().isEmpty() ?
                             new Date(Calendar.getInstance().getTime().getTime()) :
-                            new Date(new SimpleDateFormat(finalVars.DATE_FORMAT).parse(dr.getOrderDate()).getTime())),
-                    valueCounter.getOrderTotalValue(dr.getOrderId(), dataRows), dr.getAddress(), dr.getPostcode()) > 0;
+                            new Date(new SimpleDateFormat(finalVars.DATE_FORMAT).parse(order.getOrderDate()).getTime())),
+                    valueCounter.getOrderTotalValue(order.getOrderId(), orders), order.getAddress(), order.getPostcode()) > 0;
 
         }else if(table.equals(finalVars.ORDER_ITEM_TABLE)){
-            q += finalVars.ORDER_ITEM_TABLE + "(`" + finalVars.HEADER_ORDER_ITEM_ID + "`, " +
+            query += finalVars.ORDER_ITEM_TABLE + "(`" + finalVars.HEADER_ORDER_ITEM_ID + "`, " +
                             "`" + finalVars.HEADER_ORDER_ID + "`, " +
                             "`" + finalVars.HEADER_SALE_PRICE + "`, " +
                             "`" + finalVars.HEADER_SHIPPING_PRICE + "`, " +
@@ -70,9 +69,9 @@ public class UploadImpl implements RowDAO {
                             "`" + finalVars.HEADER_STATUS + "`) "+
                             "VALUES(?, ?, ?, ?, ?, ?, ?)";
 
-            return jdbcTemplate.update(q, dr.getOrderItemId(), dr.getOrderId(),
-                    dr.getSalePrice(), dr.getShippingPrice(), dr.getSalePrice() + dr.getShippingPrice(),
-                    dr.getSKU(), dr.getStatus()) > 0;
+            return jdbcTemplate.update(query, order.getOrderItemId(), order.getOrderId(),
+                    order.getSalePrice(), order.getShippingPrice(), order.getSalePrice() + order.getShippingPrice(),
+                    order.getSKU(), order.getStatus()) > 0;
 
         }
         return false;

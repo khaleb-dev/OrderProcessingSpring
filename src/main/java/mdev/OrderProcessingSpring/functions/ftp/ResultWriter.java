@@ -38,61 +38,61 @@ public class ResultWriter {
     public File write(ArrayList<UploadError> uploadErrors,
                       ArrayList<String> uploadSuccess,
                       ArrayList<ValidationError> validationErrors){
-        StringBuilder sb = new StringBuilder(finalVars.HEADER_LINE_NUMBER + ";" +
+        StringBuilder builder = new StringBuilder(finalVars.HEADER_LINE_NUMBER + ";" +
                 finalVars.HEADER_MESSAGE + ";" +
                 finalVars.HEADER_STATUS + "\n");
 
         if (uploadSuccess != null){
-            sb.append(formatUS(uploadSuccess));
+            builder.append(formatUS(uploadSuccess));
         }
 
         if (validationErrors != null){
-            sb.append(formatVE(validationErrors));
+            builder.append(formatVE(validationErrors));
         }
 
         if (uploadErrors != null){
-            sb.append(formatUF(uploadErrors));
+            builder.append(formatUF(uploadErrors));
         }
 
-        return toFile(sb.toString());
+        return toFile(builder.toString());
     }
 
     private String formatUF(ArrayList<UploadError> uploadErrors){
-        StringBuilder d = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         for (UploadError ue : uploadErrors){
-            d.append(ue.getLineNumber())
+            builder.append(ue.getLineNumber())
                     .append(";")
                     .append(ue.getMes().replaceAll("\n", " "))
                     .append(";")
                     .append(finalVars.STATUS_ERROR)
                     .append("\n");
         }
-        return d.toString();
+        return builder.toString();
     }
 
     private String formatUS(ArrayList<String> uploadSuccess){
-        StringBuilder d = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         for (String s : uploadSuccess){
-            d.append(s)
+            builder.append(s)
                     .append(";")
                     .append(";")
                     .append(finalVars.STATUS_OK)
                     .append("\n");
         }
-        return d.toString();
+        return builder.toString();
     }
 
     private String formatVE(ArrayList<ValidationError> validationErrors){
-        StringBuilder d = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         for (ValidationError ve : validationErrors){
-            d.append(ve.getLineNumber())
+            builder.append(ve.getLineNumber())
                     .append(";")
                     .append(ve.getMessage().replaceAll("\n", " "))
                     .append(";")
                     .append(ve.getStatus())
                     .append("\n");
         }
-        return d.toString();
+        return builder.toString();
     }
 
     /**
@@ -101,25 +101,25 @@ public class ResultWriter {
      * @return The file output
      */
     private File toFile(String data){
-        File f = new File(getFileName());
+        File file = new File(getFileName());
         try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(f, true));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
             bw.append(data);
             bw.close();
         } catch (IOException e) {
             OPSpringApp.log.error(shellUsrEX.getErrorMessage(e.toString()));
             return null;
         }
-        return f;
+        return file;
     }
 
     /**
      * @return Generated file name
      */
     private String getFileName(){
-        SimpleDateFormat f = new SimpleDateFormat(finalVars.DATE_FORMAT);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(finalVars.DATE_FORMAT);
         Date date = new Date(System.currentTimeMillis());
-        return f.format(date) + "_upload_response.csv";
+        return dateFormat.format(date) + "_upload_response.csv";
     }
 
 }

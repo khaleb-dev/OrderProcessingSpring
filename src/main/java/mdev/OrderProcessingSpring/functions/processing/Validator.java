@@ -3,7 +3,7 @@ package mdev.OrderProcessingSpring.functions.processing;
 import mdev.OrderProcessingSpring.OPSpringApp;
 import mdev.OrderProcessingSpring.shell.Commands;
 import mdev.OrderProcessingSpring.shell.ShellUsrEX;
-import mdev.OrderProcessingSpring.utils.DataRow;
+import mdev.OrderProcessingSpring.utils.Order;
 import mdev.OrderProcessingSpring.utils.FinalVars;
 import mdev.OrderProcessingSpring.utils.IdDAO;
 import mdev.OrderProcessingSpring.utils.ValidationError;
@@ -55,14 +55,14 @@ public class Validator {
     private boolean email, fill, date, shippingPrice, salePrice,
             status, orderItemId, orderId, postcode, lineNumber;
 
-    private ArrayList<DataRow> validData;
+    private ArrayList<Order> validData;
 
-    public String validate(DataRow[] dataRows, boolean ignoreOutput){
+    public String validate(Order[] orders, boolean ignoreOutput){
         init();
 
-        for (DataRow dr : dataRows){
-            dr.disableWarn();
-            check(dr);
+        for (Order order : orders){
+            order.disableWarn();
+            check(order);
         }
 
         if (!ignoreOutput){
@@ -73,7 +73,7 @@ public class Validator {
                                 "\n-----------------------");
             }
 
-            return shellUsrEX.getWarningMessage(Errors(dataRows.length));
+            return shellUsrEX.getWarningMessage(Errors(orders.length));
         }
 
         return "";
@@ -86,11 +86,11 @@ public class Validator {
         idDAO = context.getBean(IdDAO.class);
     }
 
-    private void check(DataRow dr){
-        setBools(dr);
+    private void check(Order order){
+        setBools(order);
 
-        if (checkEmpty(dr.getOrderDate())){
-            date = validDate(finalVars.DATE_FORMAT, dr.getOrderDate(), Locale.ENGLISH);
+        if (checkEmpty(order.getOrderDate())){
+            date = validDate(finalVars.DATE_FORMAT, order.getOrderDate(), Locale.ENGLISH);
         }else{
             date = true;
         }
@@ -99,26 +99,26 @@ public class Validator {
                 !status || !orderItemId || !orderId || !postcode || !lineNumber){
             valid = false;
             String errorMessage = errorMessageCreator.create(email, fill, date, shippingPrice,
-                    salePrice, status, orderItemId, orderId, dr);
-            validationErrors.add(new ValidationError(dr.getLineNumber(),
+                    salePrice, status, orderItemId, orderId, order);
+            validationErrors.add(new ValidationError(order.getLineNumber(),
                     errorMessage, finalVars.STATUS_ERROR));
         }else{
-            validData.add(dr);
+            validData.add(order);
         }
     }
 
-    private void setBools(DataRow dr){
-        email = validEmail(dr.getBuyerEmail());
-        fill = validFill(dr.getBuyerEmail(), dr.getBuyerName(),
-                dr.getSKU(), dr.getStatus(), dr.getAddress());
+    private void setBools(Order order){
+        email = validEmail(order.getBuyerEmail());
+        fill = validFill(order.getBuyerEmail(), order.getBuyerName(),
+                order.getSKU(), order.getStatus(), order.getAddress());
         date = true;
-        shippingPrice = validShippingPrice(dr.getShippingPrice());
-        salePrice = validSalePrice(dr.getSalePrice());
-        status = validStatus(dr.getStatus());
-        orderItemId = !validOrderItemIdInUse(dr.getOrderItemId());
-        orderId = !validOrderIdInUse(dr.getOrderId());
-        postcode = dr.getPostcode() != -1;
-        lineNumber = dr.getLineNumber() != -1;
+        shippingPrice = validShippingPrice(order.getShippingPrice());
+        salePrice = validSalePrice(order.getSalePrice());
+        status = validStatus(order.getStatus());
+        orderItemId = !validOrderItemIdInUse(order.getOrderItemId());
+        orderId = !validOrderIdInUse(order.getOrderId());
+        postcode = order.getPostcode() != -1;
+        lineNumber = order.getLineNumber() != -1;
     }
 
     private boolean checkEmpty(String s){
@@ -128,25 +128,25 @@ public class Validator {
         return !s.isEmpty();
     }
 
-    private String Errors(int drSize){
-        StringBuilder sb = new StringBuilder();
+    private String Errors(int orderSize){
+        StringBuilder builder = new StringBuilder();
 
-        sb.append("\n--------------------");
-        sb.append("\nThe file is invalid!");
-        sb.append("\n--------------------");
+        builder.append("\n--------------------");
+        builder.append("\nThe file is invalid!");
+        builder.append("\n--------------------");
 
-        float percent = percentageCalculator.calc(drSize, validationErrors);
+        float percent = percentageCalculator.calc(orderSize, validationErrors);
         if (percent != 0.0f){
-            sb.append("\nBut ");
-            sb.append(percent);
-            sb.append("% of it is valid...\n");
+            builder.append("\nBut ");
+            builder.append(percent);
+            builder.append("% of it is valid...\n");
         }
 
         for (ValidationError ve : validationErrors){
-            sb.append(ve.getMessage());
+            builder.append(ve.getMessage());
         }
 
-        return sb.toString();
+        return builder.toString();
     }
 
     private boolean validEmail(String email){
@@ -171,24 +171,24 @@ public class Validator {
 
     private boolean validDate(@SuppressWarnings("SameParameterValue") String format,
                               String value, @SuppressWarnings("SameParameterValue") Locale locale) {
-        LocalDateTime ldt;
+        LocalDateTime dateTime;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format, locale);
 
         try {
-            ldt = LocalDateTime.parse(value, formatter);
-            String result = ldt.format(formatter);
+            dateTime = LocalDateTime.parse(value, formatter);
+            String result = dateTime.format(formatter);
             return result.equals(value);
         } catch (DateTimeParseException dtpe) {
             OPSpringApp.log.debug(commands.shellUsrEX.getInfoMessage(dtpe.toString()));
             try {
-                LocalDate ld = LocalDate.parse(value, formatter);
-                String result = ld.format(formatter);
+                LocalDate localDate = LocalDate.parse(value, formatter);
+                String result = localDate.format(formatter);
                 return result.equals(value);
             } catch (DateTimeParseException dtpe1) {
                 OPSpringApp.log.debug(commands.shellUsrEX.getInfoMessage(dtpe1.toString()));
                 try {
-                    LocalTime lt = LocalTime.parse(value, formatter);
-                    String result = lt.format(formatter);
+                    LocalTime localTime = LocalTime.parse(value, formatter);
+                    String result = localTime.format(formatter);
                     return result.equals(value);
                 } catch (DateTimeParseException dtpe2) {
                     OPSpringApp.log.debug(commands.shellUsrEX.getInfoMessage(dtpe2.toString()));
@@ -228,7 +228,7 @@ public class Validator {
         return validationErrors;
     }
 
-    public DataRow[] getValidData() {
-        return validData.toArray(new DataRow[0]);
+    public Order[] getValidData() {
+        return validData.toArray(new Order[0]);
     }
 }

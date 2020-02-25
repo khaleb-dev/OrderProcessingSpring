@@ -5,9 +5,9 @@ import mdev.OrderProcessingSpring.functions.ftp.FtpNet;
 import mdev.OrderProcessingSpring.functions.ftp.ResultWriter;
 import mdev.OrderProcessingSpring.functions.processing.Validator;
 import mdev.OrderProcessingSpring.shell.ShellUsrEX;
-import mdev.OrderProcessingSpring.utils.DataRow;
+import mdev.OrderProcessingSpring.utils.Order;
 import mdev.OrderProcessingSpring.utils.FinalVars;
-import mdev.OrderProcessingSpring.utils.RowDAO;
+import mdev.OrderProcessingSpring.utils.OrderDAO;
 import mdev.OrderProcessingSpring.utils.UploadError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -43,52 +43,52 @@ public class Uploader {
     @Autowired
     public ResultWriter resultWriter;
 
-    private StringBuilder sb;
+    private StringBuilder stringBuilder;
     private ArrayList<UploadError> uploadFail;
     private ArrayList<String> uploadSuccess;
 
     /**
      * Called to upload data to the database from CommandFunctions
-     * @see mdev.OrderProcessingSpring.functions.CommandFunctions#upload(DataRow[], boolean, boolean)
+     * @see mdev.OrderProcessingSpring.functions.CommandFunctions#upload(Order[], boolean, boolean)
      * @see mdev.OrderProcessingSpring.shell.Commands#uploadFile(String, boolean, boolean)
      *
-     * @param dataRows The not fully validated rows
+     * @param orders The not fully validated rows
      *                 (number format exceptions are validated at reading the file but more validation is needed)
-     * @param uploadResponseToFtp True when the response is needed to be uploaded to the FTP server
+     * @param uploadResponseToFTP True when the response is needed to be uploaded to the FTP server
      * @param forceUpload True when the valid data is needed to be uploaded to the database from an invalid file
      * @return The results of the process
      */
-    public String upload(DataRow[] dataRows, boolean uploadResponseToFtp, boolean forceUpload){
+    public String upload(Order[] orders, boolean uploadResponseToFTP, boolean forceUpload){
         init();
 
-        validator.validate(dataRows, true);
-        sb.append(validity(forceUpload, dataRows.length));
-        sb.append(ftpUpload(uploadResponseToFtp));
+        validator.validate(orders, true);
+        stringBuilder.append(validity(forceUpload, orders.length));
+        stringBuilder.append(ftpUpload(uploadResponseToFTP));
 
         try {
             if (validator.isValid()){
-                sb.append(db(validator.getValidData()));
+                stringBuilder.append(db(validator.getValidData()));
             }else if (!validator.isValid() && forceUpload){
-                sb.append(db(validator.getValidData()));
+                stringBuilder.append(db(validator.getValidData()));
             }
         } catch (ParseException e) {
             OPSpringApp.log.error(shellUsrEX.getErrorMessage(e.toString()));
         }
 
-        if (uploadResponseToFtp){
-            sb.append(ftp());
+        if (uploadResponseToFTP){
+            stringBuilder.append(ftp());
         }
 
-        sb.append("\nProcess Done.");
-        return sb.toString();
+        stringBuilder.append("\nProcess Done.");
+        return stringBuilder.toString();
     }
 
     /**
      * Initializes objects for the upload process
-     * @see #upload(DataRow[], boolean, boolean)
+     * @see #upload(Order[], boolean, boolean)
      */
     private void init(){
-        sb = new StringBuilder();
+        stringBuilder = new StringBuilder();
         uploadFail = new ArrayList<>();
         uploadSuccess = new ArrayList<>();
     }
@@ -96,34 +96,34 @@ public class Uploader {
     /**
      * Generates some validity info about the file
      * @param forceUpload True when the valid data is needed to be uploaded to the database from an invalid file
-     * @param drSize The size of the not validated data list
+     * @param orderSize The size of the not validated data list
      * @return Validity information
      */
-    private String validity(boolean forceUpload, int drSize){
-        StringBuilder sb = new StringBuilder();
+    private String validity(boolean forceUpload, int orderSize){
+        StringBuilder validityInformationBuilder = new StringBuilder();
         if (validator.isValid()){
-            sb.append("\nThe file is 100% valid! Uploading...");
+            validityInformationBuilder.append("\nThe file is 100% valid! Uploading...");
         }else{
-            sb
+            validityInformationBuilder
                     .append("\nThe file is ")
-                    .append(validator.percentageCalculator.calc(drSize, validator.getValidationErrors()))
+                    .append(validator.percentageCalculator.calc(orderSize, validator.getValidationErrors()))
                     .append("% valid!");
             if (forceUpload){
-                sb.append("\nForce uploading...");
+                validityInformationBuilder.append("\nForce uploading...");
             }else{
-                sb.append("\n\nIf you want to upload the correct data from the invalid file,\nplease enable \"force uploading\" with the \"-F\" parameter.");
+                validityInformationBuilder.append("\n\nIf you want to upload the correct data from the invalid file,\nplease enable \"force uploading\" with the \"-F\" parameter.");
             }
         }
-        return sb.toString();
+        return validityInformationBuilder.toString();
     }
 
     /**
      * Generates info about the FTP upload process
-     * @param uploadResponseToFtp True when the response is needed to be uploaded to the FTP server
+     * @param uploadResponseToFTP True when the response is needed to be uploaded to the FTP server
      * @return FTP upload information
      */
-    private String ftpUpload(boolean uploadResponseToFtp){
-        if (uploadResponseToFtp){
+    private String ftpUpload(boolean uploadResponseToFTP){
+        if (uploadResponseToFTP){
             return "\n\nThe results will be uploaded to your ftp server as a responseFile.";
         }
         return "\n\nThe results wont be uploaded to your ftp server as a responseFile." +
@@ -174,39 +174,39 @@ public class Uploader {
 
     /**
      * Called to upload data into the database
-     * @param dataRows Validated correct data
+     * @param orders Validated correct data
      * @return The results of the process (for printing purposes in the CLI)
      * @throws ParseException Can throw exception for the DateFormats (very rare, almost impossible)
      */
-    private String db(DataRow[] dataRows) throws ParseException {
+    private String db(Order[] orders) throws ParseException {
         StringBuilder result = new StringBuilder();
 
-        RowDAO rowDAO = context.getBean(RowDAO.class);
-        for (DataRow dr : dataRows){
-            boolean u1 = rowDAO.createRow(dataRows, dr, finalVars.ORDER_TABLE);
-            boolean u2 = rowDAO.createRow(dataRows, dr, finalVars.ORDER_ITEM_TABLE);
+        OrderDAO orderDAO = context.getBean(OrderDAO.class);
+        for (Order order : orders){
+            boolean u1 = orderDAO.createRow(orders, order, finalVars.ORDER_TABLE);
+            boolean u2 = orderDAO.createRow(orders, order, finalVars.ORDER_ITEM_TABLE);
 
             if(!u1){
                 result.append("\nUpload failed when uploading row with OrderId(")
-                        .append(dr.getOrderId()).append(") and LineNumber(")
-                        .append(dr.getLineNumber())
+                        .append(order.getOrderId()).append(") and LineNumber(")
+                        .append(order.getLineNumber())
                         .append(")");
                 uploadFail.add(new UploadError(
-                        dr.getLineNumber(),
-                        "Error when uploading data with OrderId(" + dr.getOrderId() + ")"));
+                        order.getLineNumber(),
+                        "Error when uploading data with OrderId(" + order.getOrderId() + ")"));
             }else{
                 if (!u2){
                     result.append("\nUpload failed when uploading row with OrderId(")
-                            .append(dr.getOrderId()).append(") and LineNumber(")
-                            .append(dr.getLineNumber())
+                            .append(order.getOrderId()).append(") and LineNumber(")
+                            .append(order.getLineNumber())
                             .append(") and OrderItemId(")
-                            .append(dr.getLineNumber())
+                            .append(order.getLineNumber())
                             .append(")");
                     uploadFail.add(new UploadError(
-                            dr.getLineNumber(),
-                            "Error when uploading data with OrderItemId(" + dr.getOrderItemId() + ")"));
+                            order.getLineNumber(),
+                            "Error when uploading data with OrderItemId(" + order.getOrderItemId() + ")"));
                 }else{
-                    uploadSuccess.add(dr.getLineNumber() + "");
+                    uploadSuccess.add(order.getLineNumber() + "");
                 }
             }
         }

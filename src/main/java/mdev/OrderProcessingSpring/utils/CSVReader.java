@@ -22,14 +22,14 @@ public class CSVReader {
 
     private Commands commands;
 
-    public DataRow[] readFile(File file) {
-        List<DataRow> dataList = new ArrayList<>();
+    public Order[] readFile(File file) {
+        List<Order> orderList = new ArrayList<>();
         try (ICsvBeanReader reader = new CsvBeanReader(new FileReader(file), CsvPreference.EXCEL_NORTH_EUROPE_PREFERENCE)) {
             final String[] headers = reader.getHeader(true);
             final CellProcessor[] processors = getProcessors();
-            DataRow csvBean;
+            Order csvBean;
             OPSpringApp.log.debug(commands.shellUsrEX.getInfoMessage("LineNumber;OrderItemId;OrderId;BuyerName;BuyerEmail;Address;Postcode;SalePrice;ShippingPrice;SKU;Status;OrderDate"));
-            while ((csvBean = reader.read(DataRow.class, headers, processors)) != null) {
+            while ((csvBean = reader.read(Order.class, headers, processors)) != null) {
                 csvBean.setShellUsrEX(commands.shellUsrEX);
                 OPSpringApp.log.debug(commands.shellUsrEX.getInfoMessage(
                                 csvBean.getLineNumber() + ";" +
@@ -44,17 +44,17 @@ public class CSVReader {
                                 csvBean.getSKU() + ";" +
                                 csvBean.getStatus() + ";" +
                                 csvBean.getOrderDate()));
-                dataList.add(csvBean);
+                orderList.add(csvBean);
             }
 
             reader.close();
 
-            DataRow[] dr = new DataRow[dataList.size()];
-            for (int i = 0; i < dr.length; i++){
-                dr[i] = dataList.get(i);
+            Order[] orders = new Order[orderList.size()];
+            for (int i = 0; i < orders.length; i++){
+                orders[i] = orderList.get(i);
             }
 
-            return dr;
+            return orders;
         }catch (Exception ex){
             OPSpringApp.log.error(commands.shellUsrEX.getErrorMessage(ex.toString()));
             return null;

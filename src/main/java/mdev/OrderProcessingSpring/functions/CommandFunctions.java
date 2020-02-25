@@ -5,7 +5,7 @@ import mdev.OrderProcessingSpring.functions.ftp.FtpIO;
 import mdev.OrderProcessingSpring.functions.processing.Validator;
 import mdev.OrderProcessingSpring.shell.Commands;
 import mdev.OrderProcessingSpring.utils.CSVReader;
-import mdev.OrderProcessingSpring.utils.DataRow;
+import mdev.OrderProcessingSpring.utils.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.crypto.BadPaddingException;
@@ -34,16 +34,16 @@ public class CommandFunctions {
         return new File(filePath);
     }
 
-    public DataRow[] getDataRows(File file){
+    public Order[] getDataRows(File file){
         return csvReader.readFile(file);
     }
 
-    public String upload(DataRow[] dataRows, boolean uploadResponseToFtp, boolean forceUpload){
-        return uploader.upload(dataRows, uploadResponseToFtp, forceUpload);
+    public String upload(Order[] orders, boolean uploadResponseToFtp, boolean forceUpload){
+        return uploader.upload(orders, uploadResponseToFtp, forceUpload);
     }
 
-    public String validate(DataRow[] dataRows){
-        return validator.validate(dataRows, false);
+    public String validate(Order[] orders){
+        return validator.validate(orders, false);
     }
 
     public String saveFtp(String url, int port, String name, String pass) throws BadPaddingException, InvalidKeyException, IllegalBlockSizeException {

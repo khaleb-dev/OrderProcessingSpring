@@ -41,67 +41,67 @@ public class FtpIO {
      */
     public String saveFtp(String url, int port, String name, String pass) throws InvalidKeyException, BadPaddingException,
             IllegalBlockSizeException {
-        Properties p = new Properties();
-        p.put(finalVars.FTP_SERVER_KEY, url);
-        p.put(finalVars.FTP_PORT_KEY, port + "");
-        p.put(finalVars.FTP_USER_KEY, name);
+        Properties properties = new Properties();
+        properties.put(finalVars.FTP_SERVER_KEY, url);
+        properties.put(finalVars.FTP_PORT_KEY, port + "");
+        properties.put(finalVars.FTP_USER_KEY, name);
         finalVars.getCipher().init(Cipher.ENCRYPT_MODE, finalVars.getcKey());
-        p.put(finalVars.FTP_PASS_KEY, new String(Base64.getEncoder().encode(finalVars.getCipher().doFinal(pass.getBytes()))));
+        properties.put(finalVars.FTP_PASS_KEY, new String(Base64.getEncoder().encode(finalVars.getCipher().doFinal(pass.getBytes()))));
 
-        return writeFtpDetails(p);
+        return writeFtpDetails(properties);
     }
 
     /**
      * If the FTP connection is already alive, OP creates a ConnectionDetail object which contains all of the
      * login details, makes saving it easier..
-     * @param cd The connection details
+     * @param connectionDetail The connection details
      * @return The process results
      * @throws InvalidKeyException The cipher can throw this exception (used for password encoding)
      */
-    public String saveFtp(ConnectionDetail cd) throws InvalidKeyException {
-        Properties p = new Properties();
-        p.put(finalVars.FTP_SERVER_KEY, cd.getHost());
-        p.put(finalVars.FTP_PORT_KEY, cd.getPort() + "");
-        p.put(finalVars.FTP_USER_KEY, cd.getName());
+    public String saveFtp(ConnectionDetail connectionDetail) throws InvalidKeyException {
+        Properties properties = new Properties();
+        properties.put(finalVars.FTP_SERVER_KEY, connectionDetail.getHost());
+        properties.put(finalVars.FTP_PORT_KEY, connectionDetail.getPort() + "");
+        properties.put(finalVars.FTP_USER_KEY, connectionDetail.getName());
         finalVars.getCipher().init(Cipher.ENCRYPT_MODE, finalVars.getcKey());
-        p.put(finalVars.FTP_PASS_KEY, cd.getPass());
+        properties.put(finalVars.FTP_PASS_KEY, connectionDetail.getPass());
 
-        return writeFtpDetails(p);
+        return writeFtpDetails(properties);
     }
 
     /**
      * Writes the login details to a properties file and saves it
-     * @param p The properties to write into a file
+     * @param properties The properties to write into a file
      * @return The results of the process
      */
-    private String writeFtpDetails(Properties p){
-        FileOutputStream fos = null;
+    private String writeFtpDetails(Properties properties){
+        FileOutputStream outputStream = null;
         try {
-            fos = new FileOutputStream(finalVars.FTP_CONNECTION_DETAILS_PROPERTIES_NAME + ".properties");
-            p.store(fos, null);
+            outputStream = new FileOutputStream(finalVars.FTP_CONNECTION_DETAILS_PROPERTIES_NAME + ".properties");
+            properties.store(outputStream, null);
         } catch (IOException e) {
-            if (fos != null){
+            if (outputStream != null){
                 try {
-                    fos.close();
+                    outputStream.close();
                 } catch (IOException e1) {
                     OPSpringApp.log.error(commands.shellUsrEX.getErrorMessage(e1.toString()));
                 }
             }
             OPSpringApp.log.error(commands.shellUsrEX.getErrorMessage(e.toString()));
-            File f = new File(finalVars.FTP_CONNECTION_DETAILS_PROPERTIES_NAME + ".properties");
+            File file = new File(finalVars.FTP_CONNECTION_DETAILS_PROPERTIES_NAME + ".properties");
             try {
-                if(f.createNewFile()){
-                    fos = new FileOutputStream(f);
-                    p.store(fos, null);
+                if(file.createNewFile()){
+                    outputStream = new FileOutputStream(file);
+                    properties.store(outputStream, null);
                 }else{
                     OPSpringApp.log.error(commands.shellUsrEX.getErrorMessage("Could not save FTP login details!"));
                     return "";
                 }
             } catch (IOException ex1) {
                 OPSpringApp.log.error(commands.shellUsrEX.getErrorMessage(ex1.toString()));
-                if (fos != null){
+                if (outputStream != null){
                     try {
-                        fos.close();
+                        outputStream.close();
                     } catch (IOException e1) {
                         OPSpringApp.log.error(commands.shellUsrEX.getErrorMessage(e1.toString()));
                     }
@@ -110,8 +110,8 @@ public class FtpIO {
             }
         }finally {
             try {
-                if (fos != null){
-                    fos.close();
+                if (outputStream != null){
+                    outputStream.close();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -125,9 +125,9 @@ public class FtpIO {
      */
     public void removeFtp(){
         try{
-            File f = new File(finalVars.FTP_CONNECTION_DETAILS_PROPERTIES_NAME + ".properties");
-            if (f.exists()){
-                if (f.delete()){
+            File file = new File(finalVars.FTP_CONNECTION_DETAILS_PROPERTIES_NAME + ".properties");
+            if (file.exists()){
+                if (file.delete()){
                     OPSpringApp.log.info(commands.shellUsrEX.getSuccessMessage("FTP details removed."));
                 }
             }else{
@@ -147,21 +147,21 @@ public class FtpIO {
      * @return The ConnectionDetail object
      */
     public ConnectionDetail loadFromFile(){
-        ConnectionDetail cd = null;
-        Properties p = new Properties();
+        ConnectionDetail connectionDetail = null;
+        Properties properties = new Properties();
         try (InputStream is = new FileInputStream(finalVars.FTP_CONNECTION_DETAILS_PROPERTIES_NAME + ".properties")) {
 
-            p.load(is);
-            cd = new ConnectionDetail(
-                    p.getProperty(finalVars.FTP_SERVER_KEY),
-                    Integer.parseInt(p.getProperty(finalVars.FTP_PORT_KEY)),
-                    p.getProperty(finalVars.FTP_USER_KEY),
-                    p.getProperty(finalVars.FTP_PASS_KEY));
+            properties.load(is);
+            connectionDetail = new ConnectionDetail(
+                    properties.getProperty(finalVars.FTP_SERVER_KEY),
+                    Integer.parseInt(properties.getProperty(finalVars.FTP_PORT_KEY)),
+                    properties.getProperty(finalVars.FTP_USER_KEY),
+                    properties.getProperty(finalVars.FTP_PASS_KEY));
 
         } catch (IOException ex) {
             OPSpringApp.log.error(commands.shellUsrEX.getErrorMessage(ex.toString()));
         }
-        return cd;
+        return connectionDetail;
     }
 
 }

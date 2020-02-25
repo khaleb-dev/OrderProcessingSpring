@@ -81,14 +81,14 @@ public class Commands {
                 return shellUsrEX.getErrorMessage(e.toString());
             }
         }else{
-            int p;
+            int portInt;
             try{
-                p = Integer.parseInt(port);
+                portInt = Integer.parseInt(port);
             }catch (Exception ex){
-                p = finalVars.DEFAULT_FTP_PORT;
+                portInt = finalVars.DEFAULT_FTP_PORT;
             }
             try {
-                return normalFtpConnection(host, p, name, pass, saveDetails);
+                return normalFtpConnection(host, portInt, name, pass, saveDetails);
             } catch (InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
                 return shellUsrEX.getErrorMessage(e.toString());
             }
@@ -128,16 +128,16 @@ public class Commands {
     private String normalFtpConnection(String host, int p, String name, String pass, boolean save) throws InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         finalVars.getCipher().init(Cipher.ENCRYPT_MODE, finalVars.getcKey());
         try {
-            ConnectionDetail cd = new ConnectionDetail(host, p, name,
+            ConnectionDetail connectionDetail = new ConnectionDetail(host, p, name,
                     new String(Base64.getEncoder()
                             .encode(finalVars.getCipher().doFinal(pass.getBytes()))));
 
             String saveStatus = "\n";
             if (save){
-                saveStatus += ftpIO.saveFtp(cd);
+                saveStatus += ftpIO.saveFtp(connectionDetail);
             }
 
-            return shellUsrEX.getSuccessMessage(ftpNet.connect(cd) ?
+            return shellUsrEX.getSuccessMessage(ftpNet.connect(connectionDetail) ?
                     "Connected!" + (saveStatus.equals("\n") ? "" : saveStatus) :
                     "Connection failed!" + (saveStatus.equals("\n") ? "" : saveStatus));
         } catch (IOException e) {

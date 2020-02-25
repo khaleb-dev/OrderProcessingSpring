@@ -1,7 +1,7 @@
 package mdev.OrderProcessingSpring.functions.ftp;
 
 import mdev.OrderProcessingSpring.functions.db.Uploader;
-import mdev.OrderProcessingSpring.utils.DataRow;
+import mdev.OrderProcessingSpring.utils.Order;
 import mdev.OrderProcessingSpring.utils.FinalVars;
 import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +66,7 @@ public class FtpNet {
 
     /**
      * Called to upload a response file onto the FTP server
-     * @see Uploader#upload(DataRow[], boolean, boolean)
+     * @see Uploader#upload(Order[], boolean, boolean)
      *
      * @param file The response file
      * @param connectionDetail The connection details (if reconnection is needed)
