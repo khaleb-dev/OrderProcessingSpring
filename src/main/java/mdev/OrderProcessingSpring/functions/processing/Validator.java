@@ -226,11 +226,11 @@ public class Validator {
     }
 
     private boolean validOrderItemIdInUse(int id) {
-        return idDAO.validOrderItemId(id);
+        return idDAO.validOrderItemId(id) || id == -1;
     }
 
     private boolean validOrderIdInUse(int id) {
-        return idDAO.validOrderIdInUse(id);
+        return idDAO.validOrderIdInUse(id) || id == -1;
     }
 
     public boolean isValid() {

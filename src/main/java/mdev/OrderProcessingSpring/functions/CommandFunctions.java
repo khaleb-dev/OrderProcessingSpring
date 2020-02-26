@@ -34,7 +34,7 @@ public class CommandFunctions {
         return new File(filePath);
     }
 
-    public Order[] getDataRows(File file){
+    public Order[] getOrders(File file){
         return csvReader.readFile(file);
     }
 

@@ -44,10 +44,10 @@ public class Commands {
             key = {"upload", "upl", "up", "up-fl", "upload-file"})
     public String uploadFile(@ShellOption({"-P", "--path"}) String path,
                              @ShellOption({"-R", "--upload-response", "--upload-response-to-ftp", "--ur-to-ftp"}) boolean uploadResponseToFtp,
-                             @ShellOption(value = {"-F", "--force", "--force-upload"}) boolean forceUpload) {
+                             @ShellOption({"-F", "--force", "--force-upload"}) boolean forceUpload) {
         return shellUsrEX.getSuccessMessage(
                 commandFunctions.upload(
-                        commandFunctions.getDataRows(commandFunctions.readFile(path)),
+                        commandFunctions.getOrders(commandFunctions.readFile(path)),
                         uploadResponseToFtp,
                         forceUpload
                 )
@@ -71,8 +71,8 @@ public class Commands {
                                @ShellOption(value = {"-P", "--port"}, defaultValue = "") String port,
                                @ShellOption(value = {"-N", "--name"}, defaultValue = "") String name,
                                @ShellOption(value = {"-PW", "--password"}, defaultValue = "") String pass,
-                               @ShellOption(value = {"-S", "--save"}) boolean saveDetails,
-                               @ShellOption(value = {"-A", "--auto"}) boolean autoConnect){
+                               @ShellOption({"-S", "--save"}) boolean saveDetails,
+                               @ShellOption({"-A", "--auto"}) boolean autoConnect){
         if (autoConnect){
             try {
                 return shellUsrEX.getSuccessMessage(ftpNet.connect(ftpIO.loadFromFile()) ?
@@ -98,7 +98,13 @@ public class Commands {
     @ShellMethod(value = "Initializes the csv file validation process. (Checks the file validation without uploading it to the database...)",
             key = {"validate", "val", "vd", "va-fl", "validate-file"})
     public String validateFile(@ShellOption({"-P", "--path"}) String path) {
-        return shellUsrEX.getSuccessMessage(commandFunctions.validate(commandFunctions.getDataRows(commandFunctions.readFile(path))));
+        return shellUsrEX.getSuccessMessage(
+                commandFunctions.validate(
+                        commandFunctions.getOrders(
+                                commandFunctions.readFile(path)
+                        )
+                )
+        );
     }
 
     @ShellMethod(value = "Asks for FTP login details to save for later usage.",

@@ -190,8 +190,8 @@ public class Uploader {
 
         OrderDAO orderDAO = context.getBean(OrderDAO.class);
         for (Order order : orders){
-            boolean u1 = orderDAO.createRow(orders, order, dataBaseVars.ORDER_TABLE);
-            boolean u2 = orderDAO.createRow(orders, order, dataBaseVars.ORDER_ITEM_TABLE);
+            boolean u1 = orderDAO.createOrder(orders, order, dataBaseVars.ORDER_TABLE);
+            boolean u2 = orderDAO.createOrder(orders, order, dataBaseVars.ORDER_ITEM_TABLE);
 
             if(!u1){
                 result.append("\nUpload failed when uploading row with OrderId(")

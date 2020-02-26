@@ -7,6 +7,6 @@ import java.text.ParseException;
  */
 public interface OrderDAO {
 
-    boolean createRow(Order[] orders, Order dr, String table) throws ParseException;
+    boolean createOrder(Order[] orders, Order dr, String table) throws ParseException;
 
 }

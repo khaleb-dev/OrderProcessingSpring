@@ -1,7 +1,6 @@
 package mdev.OrderProcessingSpring.utils;
 
 import ch.qos.logback.classic.Logger;
-import mdev.OrderProcessingSpring.functions.db.Uploader;
 import mdev.OrderProcessingSpring.shell.Commands;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -41,19 +40,6 @@ public class CSVReader {
             logger.debug(commands.shellUsrEX.getInfoMessage("LineNumber;OrderItemId;OrderId;BuyerName;BuyerEmail;Address;Postcode;SalePrice;ShippingPrice;SKU;Status;OrderDate"));
             while ((csvBean = reader.read(Order.class, headers, processors)) != null) {
                 csvBean.setShellUsrEX(commands.shellUsrEX);
-                logger.debug(commands.shellUsrEX.getInfoMessage(
-                                csvBean.getLineNumber() + ";" +
-                                csvBean.getOrderItemId() + ";" +
-                                csvBean.getOrderId() + ";" +
-                                csvBean.getBuyerName() + ";" +
-                                csvBean.getBuyerEmail() + ";" +
-                                csvBean.getAddress() + ";" +
-                                csvBean.getPostcode() + ";" +
-                                csvBean.getSalePrice() + ";" +
-                                csvBean.getShippingPrice() + ";" +
-                                csvBean.getSKU() + ";" +
-                                csvBean.getStatus() + ";" +
-                                csvBean.getOrderDate()));
                 orderList.add(csvBean);
             }
 
@@ -72,7 +58,6 @@ public class CSVReader {
     }
 
     private CellProcessor[] getProcessors(){
-
         return new CellProcessor[] {
                 new ConvertNullTo(""), // LineNumber
                 new ConvertNullTo(""), // OrderId

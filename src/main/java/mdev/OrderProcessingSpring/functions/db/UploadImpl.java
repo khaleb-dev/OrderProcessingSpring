@@ -36,7 +36,7 @@ public class UploadImpl implements OrderDAO {
 
     /**
      * Overrides (interface) RowDAOs createRow method
-     * @see OrderDAO#createRow(Order[], Order, String)
+     * @see OrderDAO#createOrder(Order[], Order, String)
      *
      * @param orders All of the validated rows
      * @param order The row that is being uploaded
@@ -45,7 +45,7 @@ public class UploadImpl implements OrderDAO {
      * @throws ParseException Can throw exception for the DateFormats (very rare, almost impossible)
      */
     @Override
-    public boolean createRow(Order[] orders, Order order, String table) throws ParseException {
+    public boolean createOrder(Order[] orders, Order order, String table) throws ParseException {
         String query = INSERT_ROW;
         if (table.equals(dataBaseVars.ORDER_TABLE)){
             query += dataBaseVars.ORDER_TABLE + "(`" + headers.HEADER_ORDER_ID + "`, " +
