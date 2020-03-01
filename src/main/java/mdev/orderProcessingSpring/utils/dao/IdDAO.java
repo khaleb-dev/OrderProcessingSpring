@@ -1,4 +1,4 @@
-package mdev.orderProcessingSpring.utils;
+package mdev.orderProcessingSpring.utils.dao;
 
 /**
  * @author markodevelopment (Mihálovics Márkó)

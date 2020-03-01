@@ -1,6 +1,6 @@
 package mdev.orderProcessingSpring.functions.db;
 
-import mdev.orderProcessingSpring.utils.Item;
+import mdev.orderProcessingSpring.utils.models.Item;
 import org.springframework.stereotype.Component;
 
 /**

@@ -1,4 +1,7 @@
-package mdev.orderProcessingSpring.utils;
+package mdev.orderProcessingSpring.utils.dao;
+
+import mdev.orderProcessingSpring.utils.models.Item;
+import mdev.orderProcessingSpring.utils.models.Order;
 
 import java.text.ParseException;
 

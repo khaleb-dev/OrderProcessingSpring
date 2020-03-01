@@ -1,10 +1,11 @@
-package mdev.orderProcessingSpring.functions.db;
+package mdev.orderProcessingSpring.functions.db.impl;
 
-import mdev.orderProcessingSpring.utils.Item;
-import mdev.orderProcessingSpring.utils.Order;
+import mdev.orderProcessingSpring.functions.db.ValueCounter;
+import mdev.orderProcessingSpring.utils.models.Item;
+import mdev.orderProcessingSpring.utils.models.Order;
 import mdev.orderProcessingSpring.utils.vars.DataBaseVars;
 import mdev.orderProcessingSpring.utils.vars.Headers;
-import mdev.orderProcessingSpring.utils.OrderDAO;
+import mdev.orderProcessingSpring.utils.dao.OrderDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;

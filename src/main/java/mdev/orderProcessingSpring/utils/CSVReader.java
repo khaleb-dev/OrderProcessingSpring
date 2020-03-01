@@ -2,6 +2,8 @@ package mdev.orderProcessingSpring.utils;
 
 import ch.qos.logback.classic.Logger;
 import mdev.orderProcessingSpring.shell.Commands;
+import mdev.orderProcessingSpring.utils.models.Item;
+import mdev.orderProcessingSpring.utils.models.Order;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.supercsv.cellprocessor.ConvertNullTo;

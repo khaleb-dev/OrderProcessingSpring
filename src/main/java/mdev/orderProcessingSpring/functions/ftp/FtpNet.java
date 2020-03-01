@@ -1,8 +1,8 @@
 package mdev.orderProcessingSpring.functions.ftp;
 
 import mdev.orderProcessingSpring.functions.db.Uploader;
-import mdev.orderProcessingSpring.utils.Item;
-import mdev.orderProcessingSpring.utils.Order;
+import mdev.orderProcessingSpring.utils.models.Item;
+import mdev.orderProcessingSpring.utils.models.Order;
 import mdev.orderProcessingSpring.utils.vars.OPConfig;
 import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.beans.factory.annotation.Autowired;

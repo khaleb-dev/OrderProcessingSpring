@@ -1,4 +1,6 @@
-package mdev.orderProcessingSpring.utils;
+package mdev.orderProcessingSpring.utils.dao;
+
+import mdev.orderProcessingSpring.utils.models.Item;
 
 /**
  * @author markodevelopment (Mihálovics Márkó)

@@ -1,7 +1,7 @@
-package mdev.orderProcessingSpring.functions.db;
+package mdev.orderProcessingSpring.functions.db.impl;
 
 import mdev.orderProcessingSpring.utils.vars.DataBaseVars;
-import mdev.orderProcessingSpring.utils.IdDAO;
+import mdev.orderProcessingSpring.utils.dao.IdDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;

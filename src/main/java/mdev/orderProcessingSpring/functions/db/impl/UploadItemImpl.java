@@ -1,8 +1,9 @@
-package mdev.orderProcessingSpring.functions.db;
+package mdev.orderProcessingSpring.functions.db.impl;
 
-import mdev.orderProcessingSpring.utils.IdDAO;
-import mdev.orderProcessingSpring.utils.Item;
-import mdev.orderProcessingSpring.utils.ItemDAO;
+import mdev.orderProcessingSpring.functions.db.ValueCounter;
+import mdev.orderProcessingSpring.utils.dao.IdDAO;
+import mdev.orderProcessingSpring.utils.models.Item;
+import mdev.orderProcessingSpring.utils.dao.ItemDAO;
 import mdev.orderProcessingSpring.utils.vars.DataBaseVars;
 import mdev.orderProcessingSpring.utils.vars.Headers;
 import org.springframework.beans.factory.annotation.Autowired;

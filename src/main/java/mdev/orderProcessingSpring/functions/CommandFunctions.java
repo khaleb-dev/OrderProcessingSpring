@@ -5,8 +5,8 @@ import mdev.orderProcessingSpring.functions.ftp.FtpIO;
 import mdev.orderProcessingSpring.functions.processing.Validator;
 import mdev.orderProcessingSpring.shell.Commands;
 import mdev.orderProcessingSpring.utils.CSVReader;
-import mdev.orderProcessingSpring.utils.Item;
-import mdev.orderProcessingSpring.utils.Order;
+import mdev.orderProcessingSpring.utils.models.Item;
+import mdev.orderProcessingSpring.utils.models.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.crypto.BadPaddingException;

@@ -1,4 +1,4 @@
-package mdev.orderProcessingSpring.utils;
+package mdev.orderProcessingSpring.utils.models;
 
 import ch.qos.logback.classic.Logger;
 import mdev.orderProcessingSpring.shell.ShellUsrEX;
