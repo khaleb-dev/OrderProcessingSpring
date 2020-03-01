@@ -72,16 +72,16 @@ public class Uploader {
 
         try {
             if (validator.isValid()){
-                stringBuilder.append(db(validator.getValidOrders(), validator.getValidItems()));
+                stringBuilder.append(uploadToDB(validator.getValidOrders(), validator.getValidItems()));
             }else if (!validator.isValid() && forceUpload){
-                stringBuilder.append(db(validator.getValidOrders(), validator.getValidItems()));
+                stringBuilder.append(uploadToDB(validator.getValidOrders(), validator.getValidItems()));
             }
         } catch (ParseException e) {
             logger.error(shellUsrEX.getErrorMessage(e.toString()));
         }
 
         if (uploadResponseToFTP){
-            stringBuilder.append(ftp());
+            stringBuilder.append(FtpUploadProcess());
         }
 
         stringBuilder.append("\nProcess Done.");
@@ -139,13 +139,13 @@ public class Uploader {
      * Called to save and upload the results of the db upload to an FTP
      * @return The FTP upload results
      */
-    private String ftp(){
+    private String FtpUploadProcess(){
         StringBuilder result = new StringBuilder();
 
         if (!ftpNet.isConnected() && ftpNet.getConnectionDetail() != null){
             try {
                 ftpNet.connect(ftpNet.getConnectionDetail());
-                result.append(ftpU() ?
+                result.append(uploadToFTP() ?
                             "\nResponse uploaded to the FTP server successfully!" :
                             "\nFailed to upload the response to the FTP server!");
             } catch (IOException e) {
@@ -153,7 +153,7 @@ public class Uploader {
             }
         }else{
             try {
-                result.append(ftpU() ?
+                result.append(uploadToFTP() ?
                         "\nResponse uploaded to the FTP server successfully!" :
                         "\nFailed to upload the response to the FTP server!");
             } catch (IOException e) {
@@ -169,7 +169,7 @@ public class Uploader {
      * @return The process results
      * @throws IOException Can throw exception if the file or the connection or the process is corrupted
      */
-    private boolean ftpU() throws IOException {
+    private boolean uploadToFTP() throws IOException {
         return ftpNet.upload(resultWriter.write(
                 uploadFail,
                 uploadSuccess,
@@ -179,20 +179,25 @@ public class Uploader {
 
     /**
      * Called to upload data into the database
-     * @param orders Validated correct data
+     * @param orders Validated correct orders
+     * @param items Validated correct items
      * @return The results of the process (for printing purposes in the CLI)
      * @throws ParseException Can throw exception for the DateFormats (very rare, almost impossible)
      */
-    private String db(Order[] orders, Item[] items) throws ParseException {
+    private String uploadToDB(Order[] orders, Item[] items) throws ParseException {
+        return uploadOrders(orders, items) +
+                uploadItems(items);
+    }
+
+    private String uploadOrders(Order[] orders, Item[] items) throws ParseException {
         StringBuilder result = new StringBuilder();
 
         OrderDAO orderDAO = context.getBean(OrderDAO.class);
-        ItemDAO itemDAO = context.getBean(ItemDAO.class);
 
         for (Order order : orders){
-            boolean u1 = orderDAO.createOrder(items, order);
+            boolean uploadSuccess = orderDAO.createOrder(items, order);
 
-            if(!u1){
+            if(!uploadSuccess){
                 result.append("\nUpload failed when uploading order with OrderId(")
                         .append(order.getOrderId()).append(") and LineNumber(")
                         .append(order.getLineNumber())
@@ -203,15 +208,23 @@ public class Uploader {
             }
         }
 
+        return result.toString();
+    }
+
+    private String uploadItems(Item[] items) {
+        StringBuilder result = new StringBuilder();
+
+        ItemDAO itemDAO = context.getBean(ItemDAO.class);
+
         for (Item item : items){
-            boolean u2 = false;
+            boolean uploadSuccess = false;
             try{
-                u2 = itemDAO.createItem(item);
+                uploadSuccess = itemDAO.createItem(item);
             }catch (Exception ex){
                 logger.debug(shellUsrEX.getErrorMessage(ex.toString()));
             }
 
-            if (!u2){
+            if (!uploadSuccess){
                 result.append("\nUpload failed when uploading item with OrderId(")
                         .append(item.getOrderId()).append(") and LineNumber(")
                         .append(item.getLineNumber())
@@ -222,7 +235,7 @@ public class Uploader {
                         item.getLineNumber(),
                         "Error when uploading data with ItemId(" + item.getOrderItemId() + ")"));
             }else{
-                uploadSuccess.add(item.getLineNumber() + "");
+                this.uploadSuccess.add(item.getLineNumber() + "");
             }
         }
 
