@@ -13,7 +13,6 @@ import mdev.orderProcessingSpring.utils.models.Order;
 import mdev.orderProcessingSpring.utils.vars.DataBaseVars;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -30,27 +29,30 @@ public class Uploader {
     private Logger logger;
 
     @PostConstruct
-    public void initLogger(){
+    private void initLogger(){
         logger = (Logger) LoggerFactory.getLogger(Uploader.class);
     }
 
     @Autowired
-    public FtpNet ftpNet;
+    private FtpNet ftpNet;
 
     @Autowired
-    public Validator validator;
+    private Validator validator;
 
     @Autowired
-    public ApplicationContext context;
+    private DataBaseVars dataBaseVars;
 
     @Autowired
-    public DataBaseVars dataBaseVars;
+    private ShellUsrEX shellUsrEX;
 
     @Autowired
-    public ShellUsrEX shellUsrEX;
+    private ResultWriter resultWriter;
 
     @Autowired
-    public ResultWriter resultWriter;
+    private OrderDAO orderDAO;
+
+    @Autowired
+    private ItemDAO itemDAO;
 
     private StringBuilder stringBuilder;
     private ArrayList<UploadError> uploadFail;
@@ -196,8 +198,6 @@ public class Uploader {
     private String uploadOrders(Order[] orders, Item[] items) throws ParseException {
         StringBuilder result = new StringBuilder();
 
-        OrderDAO orderDAO = context.getBean(OrderDAO.class);
-
         for (Order order : orders){
             boolean uploadSuccess = orderDAO.createOrder(items, order);
 
@@ -217,8 +217,6 @@ public class Uploader {
 
     private String uploadItems(Item[] items) {
         StringBuilder result = new StringBuilder();
-
-        ItemDAO itemDAO = context.getBean(ItemDAO.class);
 
         for (Item item : items){
             boolean uploadSuccess = false;

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class PercentageCalculator {
 
     @Autowired
-    public ErrorCodes errorCodes;
+    private ErrorCodes errorCodes;
 
     /**
      * Called to calculated the validity percentage of an invalid file (~ a file that contains any kind of invalid data)

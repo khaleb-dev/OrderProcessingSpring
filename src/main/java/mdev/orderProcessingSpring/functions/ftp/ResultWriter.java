@@ -29,21 +29,21 @@ public class ResultWriter {
     private Logger logger;
 
     @PostConstruct
-    public void initLogger(){
+    private void initLogger(){
         logger = (Logger) LoggerFactory.getLogger(ResultWriter.class);
     }
 
     @Autowired
-    public StatusCodes statusCodes;
+    private StatusCodes statusCodes;
 
     @Autowired
-    public Headers headers;
+    private Headers headers;
 
     @Autowired
-    public DataBaseVars dataBaseVars;
+    private DataBaseVars dataBaseVars;
 
     @Autowired
-    public ShellUsrEX shellUsrEX;
+    private ShellUsrEX shellUsrEX;
 
     /**
      * Called to write the response file

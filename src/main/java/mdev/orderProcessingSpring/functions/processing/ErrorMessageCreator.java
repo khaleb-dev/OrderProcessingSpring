@@ -13,102 +13,121 @@ import org.springframework.stereotype.Component;
 public class ErrorMessageCreator {
 
     @Autowired
-    public ErrorCodes errorCodes;
+    private ErrorCodes errorCodes;
 
     public String createForOrder(
             boolean email, boolean fill, boolean date,
             boolean orderId, Order order){
-        String message = "\nError(s) while trying to upload the order with the \"" +
-                order.getLineNumber() + "\" line number.";
-        message += numberFormats(order);
-        message += fillErrors(fill, order);
+        StringBuilder stringBuilder = new StringBuilder("\nError(s) while trying to upload the order with the \"");
+        stringBuilder.append(order.getLineNumber());
+        stringBuilder.append("\" line number.");
+        stringBuilder.append(numberFormats(order));
+        stringBuilder.append(fillErrors(fill, order));
         if (!email){
-            message += "\n" + errorCodes.ERROR_EMAIL;
+            stringBuilder.append("\n");
+            stringBuilder.append(errorCodes.ERROR_EMAIL);
         }
         if (!date){
-            message += "\n" + errorCodes.ERROR_DATE;
+            stringBuilder.append("\n");
+            stringBuilder.append(errorCodes.ERROR_DATE);
         }
         if (!orderId){
-            message += "\n" + errorCodes.ERROR_ORDER__ID;
+            stringBuilder.append("\n");
+            stringBuilder.append(errorCodes.ERROR_ORDER__ID);
         }
-        return message + "\n";
+        stringBuilder.append("\n");
+        return stringBuilder.toString();
     }
 
     public String createForItem(
             boolean shippingPrice, boolean salePrice, boolean status,
             boolean orderItemId, boolean orderId, boolean fill, Item item){
-        String message = "\nError(s) while trying to upload the item with the \"" +
-                item.getLineNumber() + "\" line number.";
-        message += numberFormats(item);
-        message += fillErrors(fill, item);
+        StringBuilder stringBuilder = new StringBuilder("\nError(s) while trying to upload the item with the \"");
+        stringBuilder.append(item.getLineNumber());
+        stringBuilder.append("\" line number.");
+        stringBuilder.append(numberFormats(item));
+        stringBuilder.append(fillErrors(fill, item));
         if (!shippingPrice){
-            message += "\n" + errorCodes.ERROR_SHIPPING_PRICE;
+            stringBuilder.append("\n");
+            stringBuilder.append(errorCodes.ERROR_SHIPPING_PRICE);
         }
         if (!salePrice){
-            message += "\n" + errorCodes.ERROR_SALE_PRICE;
+            stringBuilder.append("\n");
+            stringBuilder.append(errorCodes.ERROR_SALE_PRICE);
         }
         if (!status){
-            message += "\n" + errorCodes.ERROR_STATUS;
+            stringBuilder.append("\n");
+            stringBuilder.append(errorCodes.ERROR_STATUS);
         }
         if (!orderItemId){
-            message += "\n" + errorCodes.ERROR_ORDER_ITEM_ID;
+            stringBuilder.append("\n");
+            stringBuilder.append(errorCodes.ERROR_ORDER_ITEM_ID);
         }
         if (!orderId){
-            message += "\n" + errorCodes.ERROR_ORDER__ID;
+            stringBuilder.append("\n");
+            stringBuilder.append(errorCodes.ERROR_ORDER__ID);
         }
-        return message + "\n";
+        stringBuilder.append("\n");
+        return stringBuilder.toString();
     }
 
     private String fillErrors(boolean fill, Order dr){
-        String message = "";
+        StringBuilder stringBuilder = new StringBuilder();
         if (!fill){
-            message += "\n" + errorCodes.ERROR_FILL + " ";
+            stringBuilder.append("\n");
+            stringBuilder.append(errorCodes.ERROR_FILL);
+            stringBuilder.append(" ");
             if (dr.getBuyerEmail().isEmpty()){
-                message += "| BuyerEmail ";
+                stringBuilder.append("| BuyerEmail ");
             }
             if (dr.getBuyerName().isEmpty()){
-                message += "| BuyerName ";
+                stringBuilder.append("| BuyerName ");
             }
             if (dr.getAddress().isEmpty()){
-                message += "| Address ";
+                stringBuilder.append("| Address ");
             }
-            message += "|";
+            stringBuilder.append("|");
         }
-        return message;
+        return stringBuilder.toString();
     }
 
     private String fillErrors(boolean fill, Item item){
-        String message = "";
+        StringBuilder stringBuilder = new StringBuilder();
         if (!fill){
-            message += "\n" + errorCodes.ERROR_FILL + " ";
+            stringBuilder.append("\n");
+            stringBuilder.append(errorCodes.ERROR_FILL);
+            stringBuilder.append(" ");
             if (item.getSKU().isEmpty()){
-                message += "| SKU ";
+                stringBuilder.append("| SKU ");
             }
             if (item.getStatus().isEmpty()){
-                message += "| Status ";
+                stringBuilder.append("| Status ");
             }
-            message += "|";
+            stringBuilder.append("|");
         }
-        return message;
+        return stringBuilder.toString();
     }
 
     private String numberFormats(Order order){
-        String message = "";
+        StringBuilder stringBuilder = new StringBuilder();
         if (order.getPostcode() == -1){
-            message += "\n" + errorCodes.ERROR_POSTCODE;
+            stringBuilder.append("\n");
+            stringBuilder.append(errorCodes.ERROR_POSTCODE);
         }
         if (order.getLineNumber() == -1){
-            message += "\n" + errorCodes.ERROR_NUMBER_FORMAT;
+            stringBuilder.append("\n");
+            stringBuilder.append(errorCodes.ERROR_NUMBER_FORMAT);
         }
-        return message;
+        return stringBuilder.toString();
     }
 
     private String numberFormats(Item item){
-        String message = "";
+        StringBuilder stringBuilder = new StringBuilder();
         if (item.getLineNumber() == -1){
-            message += "\n" + errorCodes.ERROR_NUMBER_FORMAT;
+            stringBuilder.append("\n");
+            stringBuilder.append(errorCodes.ERROR_NUMBER_FORMAT);
         }
-        return message;
+        return stringBuilder.toString();
     }
 
 }

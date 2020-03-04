@@ -27,7 +27,7 @@ public class CSVReader {
     private Logger logger;
 
     @PostConstruct
-    public void initLogger(){
+    private void initLogger(){
         logger = (Logger) LoggerFactory.getLogger(CSVReader.class);
     }
 

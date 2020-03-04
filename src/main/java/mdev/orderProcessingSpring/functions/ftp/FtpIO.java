@@ -26,17 +26,17 @@ public class FtpIO {
     private Logger logger;
 
     @PostConstruct
-    public void initLogger(){
+    private void initLogger(){
         logger = (Logger) LoggerFactory.getLogger(FtpIO.class);
     }
 
     private Commands commands;
 
     @Autowired
-    public FtpPropCodes ftpPropCodes;
+    private FtpPropCodes ftpPropCodes;
 
     @Autowired
-    public OPConfig opConfig;
+    private OPConfig opConfig;
 
     /**
      * Called to save the ftp login details

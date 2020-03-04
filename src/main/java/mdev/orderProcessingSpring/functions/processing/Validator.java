@@ -11,7 +11,6 @@ import mdev.orderProcessingSpring.utils.vars.DataBaseVars;
 import mdev.orderProcessingSpring.utils.vars.StatusCodes;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -37,29 +36,27 @@ public class Validator {
     private Logger logger;
 
     @PostConstruct
-    public void initLogger(){
+    private void initLogger(){
         logger = (Logger) LoggerFactory.getLogger(Validator.class);
     }
 
     @Autowired
-    public StatusCodes statusCodes;
+    private StatusCodes statusCodes;
 
     @Autowired
-    public DataBaseVars dataBaseVars;
+    private DataBaseVars dataBaseVars;
 
     @Autowired
-    public ShellUsrEX shellUsrEX;
+    private ShellUsrEX shellUsrEX;
 
     @Autowired
-    public Commands commands;
+    private Commands commands;
 
     @Autowired
-    public ApplicationContext context;
-
     private IdDAO idDAO;
 
     @Autowired
-    public ErrorMessageCreator errorMessageCreator;
+    private ErrorMessageCreator errorMessageCreator;
 
     @Autowired
     public PercentageCalculator percentageCalculator;
@@ -104,7 +101,6 @@ public class Validator {
         validItems = new ArrayList<>();
         validationErrors = new ArrayList<>();
         valid = true;
-        idDAO = context.getBean(IdDAO.class);
     }
 
     private void checkOrder(Order order){

@@ -29,7 +29,7 @@ public class FtpNet {
     private FTPClient client;
 
     @Autowired
-    public OPConfig OPConfig;
+    private OPConfig OPConfig;
 
     /**
      * Called to connect to an FTP server

@@ -8,7 +8,7 @@ import mdev.orderProcessingSpring.utils.vars.Headers;
 import mdev.orderProcessingSpring.utils.dao.OrderDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.text.ParseException;
@@ -18,20 +18,20 @@ import java.util.Calendar;
 /**
  * @author markodevelopment (Mihálovics Márkó)
  */
-@Component
+@Repository
 public class UploadOrderImpl implements OrderDAO {
 
     @Autowired
-    public ValueCounter valueCounter;
+    private ValueCounter valueCounter;
 
     @Autowired
-    public Headers headers;
+    private Headers headers;
 
     @Autowired
-    public DataBaseVars dataBaseVars;
+    private DataBaseVars dataBaseVars;
 
     @Autowired
-    public JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final String INSERT_ROW = "INSERT INTO ";

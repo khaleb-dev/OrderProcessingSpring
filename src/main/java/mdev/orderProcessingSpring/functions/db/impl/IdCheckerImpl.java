@@ -4,19 +4,19 @@ import mdev.orderProcessingSpring.utils.vars.DataBaseVars;
 import mdev.orderProcessingSpring.utils.dao.IdDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author markodevelopment (Mihálovics Márkó)
  */
-@Component
+@Repository
 public class IdCheckerImpl implements IdDAO {
 
     @Autowired
-    public DataBaseVars dataBaseVars;
+    private DataBaseVars dataBaseVars;
 
     @Autowired
-    public JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     /**
      * Overrides (interface) IdDAOs validOrderItemId method

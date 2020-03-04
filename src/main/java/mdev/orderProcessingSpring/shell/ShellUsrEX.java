@@ -10,16 +10,16 @@ import org.springframework.beans.factory.annotation.Value;
 public class ShellUsrEX {
 
     @Value("${shell.ux.design.info}")
-    public String infoColor;
+    private String infoColor;
 
     @Value("${shell.ux.design.success}")
-    public String successColor;
+    private String successColor;
 
     @Value("${shell.ux.design.warning}")
-    public String warningColor;
+    private String warningColor;
 
     @Value("${shell.ux.design.error}")
-    public String errorColor;
+    private String errorColor;
 
     public String getColored(String message, ShellUXDesign color) {
         return (new AttributedStringBuilder()).append(message, AttributedStyle.DEFAULT.foreground(color.getValue())).toAnsi();

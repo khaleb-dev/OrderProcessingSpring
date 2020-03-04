@@ -20,16 +20,16 @@ import java.security.InvalidKeyException;
 public class CommandFunctions {
 
     @Autowired
-    public CSVReader csvReader;
+    private CSVReader csvReader;
 
     @Autowired
-    public FtpIO ftpIO;
+    private FtpIO ftpIO;
 
     @Autowired
-    public Validator validator;
+    private Validator validator;
 
     @Autowired
-    public Uploader uploader;
+    private Uploader uploader;
 
     public File readFile(String filePath){
         return new File(filePath);

@@ -15,7 +15,7 @@ public class Order {
     private Logger logger;
 
     @PostConstruct
-    public void initLogger(){
+    private void initLogger(){
         logger = (Logger) LoggerFactory.getLogger(Order.class);
     }
 

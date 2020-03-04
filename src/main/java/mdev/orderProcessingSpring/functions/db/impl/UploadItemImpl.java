@@ -2,35 +2,34 @@ package mdev.orderProcessingSpring.functions.db.impl;
 
 import mdev.orderProcessingSpring.functions.db.ValueCounter;
 import mdev.orderProcessingSpring.utils.dao.IdDAO;
-import mdev.orderProcessingSpring.utils.models.Item;
 import mdev.orderProcessingSpring.utils.dao.ItemDAO;
+import mdev.orderProcessingSpring.utils.models.Item;
 import mdev.orderProcessingSpring.utils.vars.DataBaseVars;
 import mdev.orderProcessingSpring.utils.vars.Headers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author markodevelopment (Mihálovics Márkó)
  */
-@Component
+@Repository
 public class UploadItemImpl implements ItemDAO {
 
     @Autowired
-    public ApplicationContext context;
+    private ValueCounter valueCounter;
 
     @Autowired
-    public ValueCounter valueCounter;
+    private Headers headers;
 
     @Autowired
-    public Headers headers;
+    private DataBaseVars dataBaseVars;
 
     @Autowired
-    public DataBaseVars dataBaseVars;
+    private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public JdbcTemplate jdbcTemplate;
+    private IdDAO idDAO;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final String INSERT_ROW = "INSERT INTO ";
@@ -44,8 +43,6 @@ public class UploadItemImpl implements ItemDAO {
      */
     @Override
     public boolean createItem(Item item) {
-        IdDAO idDAO = context.getBean(IdDAO.class);
-
         String query = INSERT_ROW + dataBaseVars.ORDER_ITEM_TABLE + "(`" + headers.HEADER_ORDER_ITEM_ID + "`, " +
                 "`" + headers.HEADER_ORDER_ID + "`, " +
                 "`" + headers.HEADER_SALE_PRICE + "`, " +
