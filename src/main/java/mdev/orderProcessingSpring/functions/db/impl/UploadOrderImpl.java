@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -56,7 +57,7 @@ public class UploadOrderImpl implements OrderDAO {
                 "`" + headers.HEADER_POSTCODE + "`) " +
                 "VALUES(?, ?, ?, ?, ?, ?, ?)";
 
-        if (valueCounter.getOrderTotalValue(order.getOrderId(), items) > 0){
+        if (valueCounter.getOrderTotalValue(order.getOrderId(), items).compareTo(BigDecimal.ZERO) > 0){
             return jdbcTemplate.update(query, order.getOrderId(), order.getBuyerName(), order.getBuyerEmail(),
                     (order.getOrderDate().isEmpty() ?
                             new Date(Calendar.getInstance().getTime().getTime()) :

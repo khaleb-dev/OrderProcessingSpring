@@ -5,6 +5,7 @@ import mdev.orderProcessingSpring.shell.ShellUsrEX;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
 
 /**
  * @author markodevelopment (Mihálovics Márkó)
@@ -61,26 +62,26 @@ public class Item {
         return -1;
     }
 
-    public float getSalePrice(){
+    public BigDecimal getSalePrice(){
         try{
-            return Float.parseFloat(SalePrice);
+            return new BigDecimal(SalePrice);
         }catch (Exception ex){
             if (warn){
                 logger.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
             }
         }
-        return -1;
+        return new BigDecimal(-1);
     }
 
-    public float getShippingPrice(){
+    public BigDecimal getShippingPrice(){
         try{
-            return Float.parseFloat(ShippingPrice);
+            return new BigDecimal(ShippingPrice);
         }catch (Exception ex){
             if (warn){
                 logger.warn(shellUsrEX.getWarningMessage("\n" + ex.toString() + "\nLine number : " + getLineNumber()));
             }
         }
-        return -1;
+        return new BigDecimal(-1);
     }
 
     public String getSKU(){

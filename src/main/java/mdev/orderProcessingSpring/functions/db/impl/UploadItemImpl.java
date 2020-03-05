@@ -54,7 +54,7 @@ public class UploadItemImpl implements ItemDAO {
 
         if (idDAO.validOrderIdInUse(item.getOrderId()) && item.getOrderId() != -1){
             return jdbcTemplate.update(query, item.getOrderItemId(), item.getOrderId(),
-                    item.getSalePrice(), item.getShippingPrice(), item.getSalePrice() + item.getShippingPrice(),
+                    item.getSalePrice(), item.getShippingPrice(), item.getSalePrice().add(item.getShippingPrice()),
                     item.getSKU(), item.getStatus()) > 0;
         }
 

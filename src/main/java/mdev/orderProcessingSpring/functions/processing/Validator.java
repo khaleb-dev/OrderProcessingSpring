@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -236,12 +237,12 @@ public class Validator {
         return false;
     }
 
-    private boolean validShippingPrice(float price){
-        return price >= 0;
+    private boolean validShippingPrice(BigDecimal price){
+        return price.compareTo(BigDecimal.ZERO) > 0;
     }
 
-    private boolean validSalePrice(float price){
-        return price >= 1;
+    private boolean validSalePrice(BigDecimal price){
+        return price.compareTo(BigDecimal.ONE) >= 0;
     }
 
     private boolean validStatus(String status){

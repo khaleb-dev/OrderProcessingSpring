@@ -3,6 +3,8 @@ package mdev.orderProcessingSpring.functions.db;
 import mdev.orderProcessingSpring.utils.models.Item;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 /**
  * @author markodevelopment (Mihálovics Márkó)
  */
@@ -15,11 +17,11 @@ public class ValueCounter {
      * @param items the validated data
      * @return The total order value for the certain id
      */
-    public float getOrderTotalValue(int orderId, Item[] items){
-        float value = 0;
+    public BigDecimal getOrderTotalValue(int orderId, Item[] items){
+        BigDecimal value = BigDecimal.ZERO;
         for (Item item : items){
             if (item.getOrderId() == orderId){
-                value += item.getSalePrice() + item.getShippingPrice();
+                value = value.add(item.getSalePrice().add(item.getShippingPrice()));
             }
         }
         return value;
